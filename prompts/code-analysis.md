@@ -109,7 +109,7 @@ Identify logical groups:
 
 ## Output Format
 
-Output a single JSON object as an **internal intermediate artifact**. Do not return it to the user unless explicitly asked — continue into the normal CodeGraph SVG generation workflow (step 2: theme selection).
+Output a single JSON object as an **internal intermediate artifact**. Do not return it to the user unless explicitly asked — continue into the normal Ink-Graph SVG generation workflow (step 2: theme selection).
 
 ```json
 {
@@ -255,7 +255,7 @@ Focus on: data producers, processors, storage, consumers.
 
 ## After Analysis
 
-Once you have the JSON structure, proceed with the normal CodeGraph workflow:
+Once you have the JSON structure, proceed with the normal Ink-Graph workflow:
 1. Select theme (dark-tech recommended for code-generated diagrams, unless user specifies)
 2. If >8 nodes: call `python3 scripts/layout.py --direction {dir}` with the JSON
 3. If ≤8 nodes: plan layout manually per `references/layout-rules.md`

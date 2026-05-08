@@ -36,7 +36,6 @@
 - [Requirements](#requirements)
 - [Contributing](#contributing)
 - [Contributors](#contributors)
-- [Star History](#star-history)
 - [License](#license)
 
 </details>
@@ -243,10 +242,6 @@ Contributions are welcome — especially new themes, new diagram types, layout i
 ## Contributors
 
 [![Contributors](https://contrib.rocks/image?repo=qaz1230sp/ink-graph)](https://github.com/qaz1230sp/ink-graph/graphs/contributors)
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=qaz1230sp/ink-graph&type=Date)](https://star-history.com/#qaz1230sp/ink-graph&Date)
 
 ## License
 

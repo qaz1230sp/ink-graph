@@ -1,9 +1,9 @@
 ---
-name: codegraph
+name: ink-graph
 description: Use when the user asks to draw, generate, visualize, or export a technical diagram as SVG/PNG — architecture, flowchart, data-flow, sequence, dependency, class, ER, state, component, network, timeline, comparison, use-case, or mind-map diagrams. Triggers on "画图", "帮我画", "架构图", "流程图", "数据流", "可视化", "出图", "generate diagram", "draw diagram", "visualize", or codebase visualization requests.
 ---
 
-# CodeGraph
+# Ink-Graph
 
 Generate polished SVG technical diagrams that feel presentation-ready. Combines disciplined classification, layout rules, theme selection, reusable SVG patterns, CSS/SMIL animation, and validation-first output.
 

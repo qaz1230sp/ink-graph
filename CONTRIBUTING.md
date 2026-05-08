@@ -1,8 +1,8 @@
-# Contributing to CodeGraph
+# Contributing to Ink-Graph
 
-Thank you for your interest in CodeGraph! This project exists to help AI assistants generate polished, valid, presentation-ready SVG technical diagrams, and contributions of all sizes are welcome.
+Thank you for your interest in Ink-Graph! This project exists to help AI assistants generate polished, valid, presentation-ready SVG technical diagrams, and contributions of all sizes are welcome.
 
-CodeGraph currently supports 11 themes, 14 diagram types, and a rich reference system that guides layout, styling, animation, and validation. The best contributions improve visual clarity, keep SVG output valid, and make the references easier for agents and humans to follow.
+Ink-Graph currently supports 11 themes, 14 diagram types, and a rich reference system that guides layout, styling, animation, and validation. The best contributions improve visual clarity, keep SVG output valid, and make the references easier for agents and humans to follow.
 
 ## Ways to Contribute
 
@@ -190,13 +190,13 @@ Useful documentation contributions include:
 
 ```bash
 # Clone the repository
-git clone https://github.com/anthropics/codegraph.git
-cd codegraph
+git clone https://github.com/qaz1230sp/ink-graph.git
+cd ink-graph
 
 # Validate all existing samples
 python scripts/validate_svg.py samples/*.svg
 
-# Generate a test diagram (requires an AI assistant with CodeGraph installed)
+# Generate a test diagram (requires an AI assistant with Ink-Graph installed)
 # Then validate your output:
 python scripts/validate_svg.py your-output.svg
 ```

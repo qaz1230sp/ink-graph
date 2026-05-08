@@ -36,7 +36,6 @@
 - [环境要求](#环境要求)
 - [参与贡献](#参与贡献)
 - [贡献者](#贡献者)
-- [Star 趋势](#star-趋势)
 - [许可证](#许可证)
 
 </details>
@@ -247,14 +246,6 @@ ink-graph/
 <p align="center">
   <a href="https://github.com/qaz1230sp/ink-graph/graphs/contributors">
     <img src="https://contrib.rocks/image?repo=qaz1230sp/ink-graph" alt="Ink-Graph 贡献者列表" />
-  </a>
-</p>
-
-## Star 趋势
-
-<p align="center">
-  <a href="https://star-history.com/#qaz1230sp/ink-graph&Date">
-    <img src="https://api.star-history.com/svg?repos=qaz1230sp/ink-graph&type=Date" alt="Ink-Graph Star 趋势图" />
   </a>
 </p>
 
