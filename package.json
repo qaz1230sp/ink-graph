@@ -1,5 +1,5 @@
 {
-  "name": "ink-graph",
+  "name": "@qaz1230sp/ink-graph",
   "version": "1.0.0",
   "description": "AI Agent Skill for generating beautiful, animated SVG technical diagrams with 11 themes and 14 diagram types",
   "main": "SKILL.md",
@@ -37,8 +37,7 @@
     "references/",
     "samples/",
     "scripts/",
-    "prompts/",
-    "docs/"
+    "prompts/"
   ],
   "engines": {
     "node": ">=14.0.0"
