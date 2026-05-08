@@ -1,0 +1,266 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 840" role="img" aria-labelledby="title subtitle">
+  <title id="title">UFO³ SYSTEM ARCHITECTURE</title>
+  <desc>Comic pop themed layered architecture diagram showing orchestration, agent core, and execution layers.</desc>
+  <rect class="canvas-bg" x="0" y="0" width="100%" height="100%"/>
+  <rect class="canvas-dots" x="0" y="0" width="100%" height="100%"/>
+  <defs>
+    <pattern id="comic-dots" width="8" height="8" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="1.5" fill="#3a3a3a"/>
+    </pattern>
+
+    <filter id="comic-shadow" x="-5%" y="-5%" width="115%" height="115%">
+      <feOffset dx="3" dy="3" in="SourceGraphic" result="offset"/>
+      <feFlood flood-color="#000000" flood-opacity="0.4" result="color"/>
+      <feComposite in="color" in2="offset" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="comic-glow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="4" in="SourceGraphic" result="blur"/>
+      <feFlood flood-color="#ffd700" flood-opacity="0.6" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <marker id="arrow-data" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#4488ff"/>
+    </marker>
+    <marker id="arrow-control" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#ffffff"/>
+    </marker>
+    <marker id="arrow-dependency" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#ff4444"/>
+    </marker>
+    <marker id="arrow-async" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#44dd44"/>
+    </marker>
+  </defs>
+  <style>
+    :root {
+      --canvas-bg: #2b2b2b;
+      --canvas-dots: #3a3a3a;
+      --node-fill: #ffffff;
+      --node-stroke: #1a1a1a;
+      --node-stroke-hover: #ff4444;
+      --text-primary: #1a1a1a;
+      --text-secondary: #555555;
+      --text-title: #ffd700;
+      --edge-data: #4488ff;
+      --edge-control: #ffffff;
+      --edge-dependency: #ff4444;
+      --edge-async: #44dd44;
+      --group-fill: rgba(255,215,0,0.08);
+      --group-stroke: #1a1a1a;
+      --group-label: #ffd700;
+      --flow-duration: 2s;
+    }
+
+    svg {
+      background: var(--canvas-bg);
+      font-family: "Bangers", "Comic Neue", "Comic Sans MS", cursive;
+    }
+
+    .canvas-bg {
+      fill: var(--canvas-bg);
+    }
+
+    .canvas-dots {
+      fill: url(#comic-dots);
+    }
+
+    .diagram-title {
+      fill: var(--text-title);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .node-shape {
+      fill: var(--node-fill);
+      stroke: var(--node-stroke);
+      stroke-width: 3;
+      filter: url(#comic-shadow);
+    }
+
+    .node-label {
+      fill: var(--text-primary);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .node-sublabel,
+    .edge-label {
+      fill: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .group-shape {
+      fill: var(--group-fill);
+      stroke: var(--group-stroke);
+      stroke-width: 2.5;
+      stroke-dasharray: 12,6;
+    }
+
+    .group-label {
+      fill: var(--group-label);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .edge-data,
+    .edge-control,
+    .edge-dependency,
+    .edge-async {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .edge-data { stroke: var(--edge-data); stroke-width: 2.5; marker-end: url(#arrow-data); }
+    .edge-control { stroke: var(--edge-control); stroke-width: 2.5; marker-end: url(#arrow-control); }
+    .edge-dependency { stroke: var(--edge-dependency); stroke-width: 2.5; stroke-dasharray: 8,4; marker-end: url(#arrow-dependency); }
+    .edge-async { stroke: var(--edge-async); stroke-width: 2.5; stroke-dasharray: 4,4; marker-end: url(#arrow-async); }
+
+    .edge-animated {
+      stroke-dasharray: 12,6;
+      animation: cg-edge-flow var(--flow-duration) linear infinite;
+    }
+
+    @keyframes cg-edge-flow {
+      to { stroke-dashoffset: -36; }
+    }
+  </style>
+  <style>
+    .subtitle {
+      fill: var(--node-fill);
+      font-size: 12px;
+      font-weight: 400;
+      opacity: 0.88;
+    }
+
+    .group-divider {
+      stroke: var(--group-stroke);
+      stroke-width: 1.5;
+      stroke-dasharray: 4,4;
+      opacity: 0.65;
+    }
+
+    .edge-no-marker {
+      marker-end: none;
+    }
+
+    .legend-panel {
+      fill: rgba(43,43,43,0.9);
+      stroke: var(--group-label);
+      stroke-width: 1.5;
+    }
+
+    .legend-title {
+      fill: var(--group-label);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .legend-text {
+      fill: var(--node-fill);
+      font-size: 11px;
+      font-weight: 400;
+    }
+  </style>
+
+  <text id="subtitle" x="410" y="28" text-anchor="middle" class="diagram-title">UFO³ SYSTEM ARCHITECTURE</text>
+  <text x="410" y="52" text-anchor="middle" class="subtitle">Comic Pop · Layered service architecture</text>
+
+  <g class="group">
+    <rect class="group-shape" x="190" y="96" width="440" height="260" rx="12"/>
+    <line class="group-divider" x1="190" y1="128" x2="630" y2="128"/>
+    <text class="group-label" x="210" y="117">ORCHESTRATION</text>
+  </g>
+  <g class="group">
+    <rect class="group-shape" x="190" y="384" width="440" height="116" rx="12"/>
+    <line class="group-divider" x1="190" y1="416" x2="630" y2="416"/>
+    <text class="group-label" x="210" y="405">AGENT CORE</text>
+  </g>
+  <g class="group">
+    <rect class="group-shape" x="70" y="528" width="680" height="116" rx="12"/>
+    <line class="group-divider" x1="70" y1="560" x2="750" y2="560"/>
+    <text class="group-label" x="90" y="549">EXECUTION</text>
+  </g>
+
+  <g class="edges">
+    <path class="edge-control edge-no-marker" d="M 410 192 V 244"/>
+    <path class="edge-control" d="M 410 244 H 290 V 284"/>
+    <path class="edge-control" d="M 410 244 H 530 V 284"/>
+    <path class="edge-control" d="M 290 336 V 428"/>
+
+    <path class="edge-data edge-animated edge-no-marker" d="M 290 480 V 556"/>
+    <path class="edge-data edge-animated" d="M 290 556 H 170 V 572"/>
+    <path class="edge-data edge-animated" d="M 290 556 H 410 V 572"/>
+    <path class="edge-data edge-animated" d="M 290 556 H 650 V 572"/>
+
+    <path class="edge-dependency" d="M 610 314 H 678 V 458 H 610" marker-start="url(#arrow-dependency)"/>
+  </g>
+
+  <g class="node" transform="translate(330,148)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="12"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">Galaxy Server</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">cloud orchestrator</text>
+  </g>
+  <g class="node" transform="translate(210,292)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="12"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">Constellation DAG</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">task graph</text>
+  </g>
+  <g class="node" transform="translate(450,292)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="12"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">Knowledge Store</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">memory</text>
+  </g>
+  <g class="node" transform="translate(210,436)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="12"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">AppAgent</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">application controller</text>
+  </g>
+  <g class="node" transform="translate(450,436)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="12"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">Experience Manager</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">learning</text>
+  </g>
+  <g class="node" transform="translate(90,580)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="12"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">UI Executor</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">GUI</text>
+  </g>
+  <g class="node" transform="translate(330,580)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="12"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">CLI Executor</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">command line</text>
+  </g>
+  <g class="node" transform="translate(570,580)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="12"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">API Executor</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">programmatic</text>
+  </g>
+
+  <g class="legend" transform="translate(56,712)">
+    <rect class="legend-panel" x="-12" y="-4" width="176" height="104" rx="8"/>
+    <text class="legend-title" x="0" y="14">Legend</text>
+    <line x1="0" y1="36" x2="40" y2="36" class="edge-control"/>
+    <text class="legend-text" x="52" y="36" dominant-baseline="middle">control</text>
+    <line x1="0" y1="60" x2="40" y2="60" class="edge-data edge-animated"/>
+    <text class="legend-text" x="52" y="60" dominant-baseline="middle">data</text>
+    <line x1="0" y1="84" x2="40" y2="84" class="edge-dependency" marker-start="url(#arrow-dependency)"/>
+    <text class="legend-text" x="52" y="84" dominant-baseline="middle">dependency</text>
+  </g>
+</svg>

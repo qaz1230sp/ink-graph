@@ -1,0 +1,351 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 840" role="img" aria-labelledby="svg-title svg-desc">
+  <title id="svg-title">UFO³ SYSTEM ARCHITECTURE</title>
+  <desc id="svg-desc">HUD / hologram themed layered architecture diagram showing orchestration, agent core, and execution groups.</desc>
+  <rect class="canvas-bg" x="0" y="0" width="820" height="840"/>
+  <defs>
+    <pattern id="hud-scanlines" x="0" y="0" width="820" height="2" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="820" y2="0" stroke="#00c8ff" stroke-opacity="0.02" stroke-width="1"/>
+    </pattern>
+    <filter id="hud-glow" x="-15%" y="-15%" width="130%" height="130%">
+      <feGaussianBlur stdDeviation="2" in="SourceGraphic" result="blur"/>
+      <feFlood flood-color="#00c8ff" flood-opacity="0.3" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <marker id="arrow-data" viewBox="0 0 6 6" refX="5.2" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 6 3 L 0 6 Z" fill="#00c8ff"/>
+    </marker>
+    <marker id="arrow-control" viewBox="0 0 6 6" refX="5.2" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 6 3 L 0 6 Z" fill="#00ff88"/>
+    </marker>
+    <marker id="arrow-dependency" viewBox="0 0 6 6" refX="5.2" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 6 3 L 0 6 Z" fill="#ff6040"/>
+    </marker>
+  </defs>
+  <style>
+    :root {
+      --canvas-bg: #0a0e17;
+      --node-fill: rgba(0,200,255,0.06);
+      --node-stroke: #00c8ff;
+      --text-primary: #00c8ff;
+      --text-secondary: #0090bb;
+      --text-title: #00c8ff;
+      --edge-data: #00c8ff;
+      --edge-control: #00ff88;
+      --edge-dependency: #ff6040;
+      --group-fill: rgba(0,200,255,0.03);
+      --group-stroke: rgba(0,200,255,0.4);
+      --group-label: #00c8ff;
+      --legend-bg: rgba(10,14,23,0.9);
+    }
+
+    svg {
+      background: var(--canvas-bg);
+      font-family: "IBM Plex Mono", "Consolas", monospace;
+      shape-rendering: geometricPrecision;
+      text-rendering: geometricPrecision;
+    }
+
+    text {
+      text-transform: uppercase;
+    }
+
+    .canvas-bg {
+      fill: var(--canvas-bg);
+    }
+
+    .group-shape {
+      fill: var(--group-fill);
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+      stroke-dasharray: 6 4;
+    }
+
+    .group-divider {
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+      stroke-dasharray: 6 4;
+      opacity: 0.65;
+    }
+
+    .group-label {
+      fill: var(--group-label);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .node-shape {
+      fill: var(--node-fill);
+      stroke: var(--node-stroke);
+      stroke-width: 1.5;
+      filter: url(#hud-glow);
+      animation: hud-pulse 2.5s ease-in-out infinite;
+    }
+
+    .node-label {
+      fill: var(--text-primary);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .node-sublabel {
+      fill: var(--text-secondary);
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .edge-data,
+    .edge-control,
+    .edge-dependency {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .edge-data {
+      stroke: var(--edge-data);
+      stroke-width: 1.5;
+      marker-end: url(#arrow-data);
+    }
+
+    .edge-control {
+      stroke: var(--edge-control);
+      stroke-width: 1.5;
+      marker-end: url(#arrow-control);
+    }
+
+    .edge-dependency {
+      stroke: var(--edge-dependency);
+      stroke-width: 1.5;
+      stroke-dasharray: 8 4;
+      marker-end: url(#arrow-dependency);
+    }
+
+    .edge-animated {
+      stroke-dasharray: 8 4;
+      animation: cg-edge-flow 2s linear infinite;
+    }
+
+    .edge-no-marker {
+      marker-end: none;
+    }
+
+    .edge-bidirectional {
+      marker-start: url(#arrow-dependency);
+      marker-end: url(#arrow-dependency);
+    }
+
+    .junction-control {
+      fill: var(--edge-control);
+    }
+
+    .junction-data {
+      fill: var(--edge-data);
+    }
+
+    .diagram-title {
+      fill: var(--text-title);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 6px;
+    }
+
+    .subtitle {
+      fill: var(--text-secondary);
+      font-size: 12px;
+      letter-spacing: 3px;
+    }
+
+    .status-text {
+      fill: var(--text-primary);
+      font-size: 9px;
+      letter-spacing: 2px;
+      opacity: 0.4;
+    }
+
+    .hud-bracket line,
+    .crosshair line,
+    .crosshair circle {
+      stroke: var(--node-stroke);
+      stroke-width: 1;
+      fill: none;
+    }
+
+    .crosshair {
+      opacity: 0.3;
+    }
+
+    .legend-panel {
+      fill: var(--legend-bg);
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+    }
+
+    .legend-title {
+      fill: var(--text-primary);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .legend-text {
+      fill: var(--text-primary);
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .scanline-overlay {
+      fill: url(#hud-scanlines);
+      pointer-events: none;
+    }
+
+    .node-accent {
+      fill: none;
+      stroke: var(--node-stroke);
+      stroke-width: 1;
+      opacity: 0.35;
+    }
+
+    .group-title-bar {
+      fill: rgba(0,200,255,0.05);
+    }
+
+    @keyframes cg-edge-flow {
+      to { stroke-dashoffset: -24; }
+    }
+
+    @keyframes hud-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.88; }
+    }
+  </style>
+
+  <g class="groups">
+    <rect class="group-shape" x="190" y="96" width="440" height="260" rx="6"/>
+    <line class="group-divider" x1="190" y1="128" x2="630" y2="128"/>
+    <text class="group-label" x="210" y="117">ORCHESTRATION</text>
+
+    <rect class="group-shape" x="190" y="384" width="440" height="116" rx="6"/>
+    <line class="group-divider" x1="190" y1="416" x2="630" y2="416"/>
+    <text class="group-label" x="210" y="405">AGENT CORE</text>
+
+    <rect class="group-shape" x="70" y="544" width="680" height="116" rx="6"/>
+    <line class="group-divider" x1="70" y1="576" x2="750" y2="576"/>
+    <text class="group-label" x="90" y="565">EXECUTION</text>
+  </g>
+
+  <g class="edges">
+    <path class="edge-control edge-no-marker" d="M 410 192 V 244"/>
+    <circle class="junction-control" cx="410" cy="244" r="3"/>
+    <path class="edge-control edge-no-marker" d="M 290 244 H 530"/>
+    <path class="edge-control" d="M 290 244 V 284"/>
+    <path class="edge-control" d="M 530 244 V 284"/>
+    <path class="edge-control" d="M 290 336 V 428"/>
+
+    <path class="edge-data edge-animated edge-no-marker" d="M 290 480 V 522"/>
+    <circle class="junction-data" cx="290" cy="522" r="3"/>
+    <path class="edge-data edge-animated edge-no-marker" d="M 170 522 H 650"/>
+    <path class="edge-data edge-animated" d="M 170 522 V 588"/>
+    <path class="edge-data edge-animated" d="M 410 522 V 588"/>
+    <path class="edge-data edge-animated" d="M 650 522 V 588"/>
+
+    <path class="edge-dependency edge-bidirectional" d="M 618 314 H 676 V 458 H 618"/>
+  </g>
+
+  <g class="nodes">
+    <g class="node">
+      <rect class="node-shape" x="330" y="148" width="160" height="44" rx="2"/>
+      <text class="node-label" x="410" y="166" text-anchor="middle">GALAXY SERVER</text>
+      <text class="node-sublabel" x="410" y="180" text-anchor="middle" textLength="136" lengthAdjust="spacingAndGlyphs">CLOUD ORCHESTRATOR</text>
+    </g>
+
+    <g class="node">
+      <rect class="node-shape" x="210" y="292" width="160" height="44" rx="2"/>
+      <text class="node-label" x="290" y="310" text-anchor="middle" textLength="136" lengthAdjust="spacingAndGlyphs">CONSTELLATION DAG</text>
+      <text class="node-sublabel" x="290" y="324" text-anchor="middle">TASK GRAPH</text>
+    </g>
+
+    <g class="node">
+      <rect class="node-shape" x="450" y="292" width="160" height="44" rx="2"/>
+      <text class="node-label" x="530" y="310" text-anchor="middle">KNOWLEDGE STORE</text>
+      <text class="node-sublabel" x="530" y="324" text-anchor="middle">MEMORY</text>
+    </g>
+
+    <g class="node">
+      <rect class="node-shape" x="210" y="436" width="160" height="44" rx="2"/>
+      <text class="node-label" x="290" y="454" text-anchor="middle">APPAGENT</text>
+      <text class="node-sublabel" x="290" y="468" text-anchor="middle" textLength="136" lengthAdjust="spacingAndGlyphs">APPLICATION CONTROLLER</text>
+    </g>
+
+    <g class="node">
+      <rect class="node-shape" x="450" y="436" width="160" height="44" rx="2"/>
+      <text class="node-label" x="530" y="454" text-anchor="middle" textLength="136" lengthAdjust="spacingAndGlyphs">EXPERIENCE MANAGER</text>
+      <text class="node-sublabel" x="530" y="468" text-anchor="middle">LEARNING</text>
+    </g>
+
+    <g class="node">
+      <rect class="node-shape" x="90" y="596" width="160" height="44" rx="2"/>
+      <text class="node-label" x="170" y="614" text-anchor="middle">UI EXECUTOR</text>
+      <text class="node-sublabel" x="170" y="628" text-anchor="middle">GUI</text>
+    </g>
+
+    <g class="node">
+      <rect class="node-shape" x="330" y="596" width="160" height="44" rx="2"/>
+      <text class="node-label" x="410" y="614" text-anchor="middle">CLI EXECUTOR</text>
+      <text class="node-sublabel" x="410" y="628" text-anchor="middle">COMMAND LINE</text>
+    </g>
+
+    <g class="node">
+      <rect class="node-shape" x="570" y="596" width="160" height="44" rx="2"/>
+      <text class="node-label" x="650" y="614" text-anchor="middle">API EXECUTOR</text>
+      <text class="node-sublabel" x="650" y="628" text-anchor="middle">PROGRAMMATIC</text>
+    </g>
+  </g>
+
+  <g class="floating-labels">
+    <g class="hud-bracket" opacity="0.5">
+      <line x1="12" y1="12" x2="32" y2="12"/>
+      <line x1="12" y1="12" x2="12" y2="32"/>
+    </g>
+    <g class="hud-bracket" opacity="0.5">
+      <line x1="808" y1="12" x2="788" y2="12"/>
+      <line x1="808" y1="12" x2="808" y2="32"/>
+    </g>
+    <g class="hud-bracket" opacity="0.5">
+      <line x1="12" y1="828" x2="32" y2="828"/>
+      <line x1="12" y1="828" x2="12" y2="808"/>
+    </g>
+    <g class="hud-bracket" opacity="0.5">
+      <line x1="808" y1="828" x2="788" y2="828"/>
+      <line x1="808" y1="828" x2="808" y2="808"/>
+    </g>
+
+    <text x="410" y="28" text-anchor="middle" class="diagram-title">UFO³ SYSTEM ARCHITECTURE</text>
+    <text x="410" y="52" text-anchor="middle" class="subtitle">HUD · TACTICAL SYSTEM OVERVIEW</text>
+    <text x="790" y="24" text-anchor="end" class="status-text">STATUS: ONLINE</text>
+
+    <g class="crosshair">
+      <circle cx="268" cy="28" r="3"/>
+      <line x1="262" y1="28" x2="274" y2="28"/>
+      <line x1="268" y1="22" x2="268" y2="34"/>
+    </g>
+
+    <g class="legend" transform="translate(60,708)">
+      <rect class="legend-panel" x="-12" y="-4" width="200" height="104" rx="6"/>
+      <text class="legend-title" x="0" y="14">LEGEND</text>
+      <line x1="0" y1="36" x2="40" y2="36" class="edge-control"/>
+      <text class="legend-text" x="52" y="36" dominant-baseline="middle">CONTROL</text>
+      <line x1="0" y1="60" x2="40" y2="60" class="edge-data edge-animated"/>
+      <text class="legend-text" x="52" y="60" dominant-baseline="middle">DATA</text>
+      <line x1="4" y1="84" x2="36" y2="84" class="edge-dependency edge-bidirectional"/>
+      <text class="legend-text" x="52" y="84" dominant-baseline="middle">DEPENDENCY</text>
+    </g>
+  </g>
+
+  <rect class="scanline-overlay" x="0" y="0" width="820" height="840"/>
+</svg>

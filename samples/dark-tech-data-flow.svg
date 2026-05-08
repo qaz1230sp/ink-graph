@@ -1,0 +1,325 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 520" role="img" aria-labelledby="title subtitle">
+  <title id="title">Real-time ML Pipeline</title>
+  <desc>Dark-tech data-flow diagram of a real-time machine learning pipeline with ingestion, processing, and serving groups plus animated data edges.</desc>
+  <rect x="0" y="0" width="1120" height="520" fill="#0f172a"/>
+  <defs>
+    <filter id="glow-sm" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feFlood flood-color="rgba(56,189,248,0.3)" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <marker id="arrow-data" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-control" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#f97316"/>
+    </marker>
+    <marker id="arrow-dependency" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#64748b"/>
+    </marker>
+    <marker id="arrow-async" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#a78bfa"/>
+    </marker>
+
+    <pattern id="tech-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#334155" stroke-width="1" opacity="0.38"/>
+      <path d="M 20 0 V 40 M 0 20 H 40" fill="none" stroke="#1e293b" stroke-width="1" opacity="0.55"/>
+    </pattern>
+  </defs>
+  <style>
+    :root {
+      --canvas-bg: #0f172a;
+      --node-fill: #1e293b;
+      --node-stroke: #38bdf8;
+      --node-stroke-hover: #7dd3fc;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-title: #f1f5f9;
+      --edge-data: #38bdf8;
+      --edge-control: #f97316;
+      --edge-dependency: #64748b;
+      --edge-async: #a78bfa;
+      --group-fill: #1e293b80;
+      --group-stroke: #334155;
+      --group-label: #94a3b8;
+      --accent: #38bdf8;
+      --glow-color: rgba(56,189,248,0.3);
+      --hover-glow-color: rgba(56,189,248,0.4);
+      --hover-glow-radius: 8px;
+      --flow-duration: 1.5s;
+      --entrance-duration: 0.4s;
+      --entrance-stagger: 0.1s;
+    }
+
+    svg {
+      background: var(--canvas-bg);
+      font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+    }
+
+    .diagram-title {
+      fill: var(--text-title);
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .node {
+      animation: cg-node-enter var(--entrance-duration) ease both;
+      animation-delay: calc(var(--enter-index, 0) * var(--entrance-stagger));
+      transform-origin: center;
+    }
+
+    .node-shape {
+      fill: var(--node-fill);
+      stroke: var(--node-stroke);
+      stroke-width: 1.5;
+      filter: url(#glow-sm);
+      transition: stroke 0.2s ease, filter 0.2s ease;
+    }
+
+    .node:hover .node-shape {
+      stroke: var(--node-stroke-hover);
+      filter: url(#glow-sm) drop-shadow(0 0 var(--hover-glow-radius) var(--hover-glow-color));
+      animation: cg-hover-glow 1.2s ease-in-out infinite;
+    }
+
+    .node-label {
+      fill: var(--text-primary);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .node-sublabel,
+    .edge-label {
+      fill: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .group-shape {
+      fill: var(--group-fill);
+      stroke: var(--group-stroke);
+      stroke-width: 1.5;
+      stroke-dasharray: 6,4;
+    }
+
+    .group-label {
+      fill: var(--group-label);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .edge-data,
+    .edge-control,
+    .edge-dependency,
+    .edge-async {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .edge-data { stroke: var(--edge-data); stroke-width: 1.5; marker-end: url(#arrow-data); }
+    .edge-control { stroke: var(--edge-control); stroke-width: 1.5; marker-end: url(#arrow-control); }
+    .edge-dependency { stroke: var(--edge-dependency); stroke-width: 1.5; stroke-dasharray: 6,3; marker-end: url(#arrow-dependency); }
+    .edge-async { stroke: var(--edge-async); stroke-width: 1.5; stroke-dasharray: 4,3; marker-end: url(#arrow-async); }
+
+    .edge-animated {
+      stroke-dasharray: 8,4;
+      animation: cg-edge-flow var(--flow-duration) linear infinite;
+    }
+
+    @keyframes cg-edge-flow {
+      to { stroke-dashoffset: -24; }
+    }
+
+    @keyframes cg-node-enter {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes cg-hover-glow {
+      0%, 100% {
+        filter: url(#glow-sm) drop-shadow(0 0 4px rgba(56,189,248,0.25));
+      }
+      50% {
+        filter: url(#glow-sm) drop-shadow(0 0 var(--hover-glow-radius) var(--hover-glow-color));
+      }
+    }
+  </style>
+  <style>
+    .subtitle {
+      fill: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .grid-overlay {
+      fill: url(#tech-grid);
+      opacity: 0.34;
+    }
+
+    .group-title-bar {
+      fill: rgba(15, 23, 42, 0.72);
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+    }
+
+    .group-divider {
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+      stroke-dasharray: 6,4;
+      opacity: 0.75;
+    }
+
+    .node-accent {
+      fill: none;
+      stroke: var(--node-stroke);
+      stroke-width: 1.2;
+      opacity: 0.9;
+    }
+
+    .edge-no-marker {
+      marker-end: none;
+    }
+
+    .legend-panel {
+      fill: rgba(15, 23, 42, 0.6);
+      stroke: var(--accent);
+      stroke-width: 1;
+    }
+
+    .legend-title {
+      fill: var(--group-label);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .legend-text {
+      fill: var(--text-primary);
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .enter-0 { --enter-index: 0; }
+    .enter-1 { --enter-index: 1; }
+    .enter-2 { --enter-index: 2; }
+    .enter-3 { --enter-index: 3; }
+    .enter-4 { --enter-index: 4; }
+    .enter-5 { --enter-index: 5; }
+    .enter-6 { --enter-index: 6; }
+  </style>
+
+  <rect x="0" y="0" width="1120" height="520" class="grid-overlay"/>
+
+  <g class="group" transform="translate(50,100)">
+    <rect width="180" height="224" rx="14" class="group-shape"/>
+    <path d="M 14,0 H 166 A 14,14 0 0 1 180,14 V 32 H 0 V 14 A 14,14 0 0 1 14,0 Z" class="group-title-bar"/>
+    <path d="M 0,32 H 180" class="group-divider"/>
+    <text x="20" y="20" text-anchor="start" dominant-baseline="central" class="group-label">INGESTION</text>
+  </g>
+  <g class="group" transform="translate(280,100)">
+    <rect width="420" height="224" rx="14" class="group-shape"/>
+    <path d="M 14,0 H 406 A 14,14 0 0 1 420,14 V 32 H 0 V 14 A 14,14 0 0 1 14,0 Z" class="group-title-bar"/>
+    <path d="M 0,32 H 420" class="group-divider"/>
+    <text x="20" y="20" text-anchor="start" dominant-baseline="central" class="group-label">PROCESSING</text>
+  </g>
+  <g class="group" transform="translate(720,100)">
+    <rect width="360" height="224" rx="14" class="group-shape"/>
+    <path d="M 14,0 H 346 A 14,14 0 0 1 360,14 V 32 H 0 V 14 A 14,14 0 0 1 14,0 Z" class="group-title-bar"/>
+    <path d="M 0,32 H 360" class="group-divider"/>
+    <text x="20" y="20" text-anchor="start" dominant-baseline="central" class="group-label">SERVING</text>
+  </g>
+
+  <g>
+    <path class="edge-data edge-animated" d="M 140 190 C 140 210, 140 228, 140 248"/>
+    <path class="edge-data edge-animated" d="M 210 278 C 240 278, 248 232, 292 232"/>
+    <path class="edge-data edge-animated edge-no-marker" d="M 440 232 C 455 232, 470 232, 490 232"/>
+    <path class="edge-data edge-animated" d="M 490 232 C 506 232, 516 168, 532 168"/>
+    <path class="edge-data edge-animated" d="M 490 232 C 506 232, 516 278, 532 278"/>
+    <path class="edge-data edge-animated" d="M 680 168 C 696 168, 712 168, 732 168"/>
+    <path class="edge-data edge-animated" d="M 880 168 C 888 168, 894 168, 902 168"/>
+    <path class="edge-data edge-animated" d="M 980 190 C 980 208, 980 226, 980 248"/>
+  </g>
+
+  <g transform="translate(70,146)">
+    <g class="node enter-0">
+      <rect class="node-shape" x="0" y="0" width="140" height="44" rx="10"/>
+      <text class="node-label" x="70" y="22" text-anchor="middle" dominant-baseline="central">IoT Sensors</text>
+    </g>
+  </g>
+  <g transform="translate(70,256)">
+    <g class="node enter-1">
+      <rect class="node-shape" x="0" y="0" width="140" height="44" rx="10"/>
+      <text class="node-label" x="70" y="22" text-anchor="middle" dominant-baseline="central">Kafka Ingest</text>
+    </g>
+  </g>
+  <g transform="translate(300,210)">
+    <g class="node enter-2">
+      <rect class="node-shape" x="0" y="0" width="140" height="44" rx="10"/>
+      <text class="node-label" x="70" y="17" text-anchor="middle">Stream</text>
+      <text class="node-label" x="70" y="31" text-anchor="middle">Processor</text>
+    </g>
+  </g>
+  <g transform="translate(540,140)">
+    <g class="node enter-3">
+      <rect class="node-shape" x="0" y="8" width="140" height="40"/>
+      <ellipse class="node-shape" cx="70" cy="8" rx="70" ry="8"/>
+      <path class="node-accent" d="M 0 48 A 70 8 0 0 0 140 48"/>
+      <text class="node-label" x="70" y="28" text-anchor="middle" dominant-baseline="central">Feature Store</text>
+    </g>
+  </g>
+  <g transform="translate(540,250)">
+    <g class="node enter-4">
+      <rect class="node-shape" x="0" y="8" width="140" height="40"/>
+      <ellipse class="node-shape" cx="70" cy="8" rx="70" ry="8"/>
+      <path class="node-accent" d="M 0 48 A 70 8 0 0 0 140 48"/>
+      <text class="node-label" x="70" y="28" text-anchor="middle" dominant-baseline="central">Data Warehouse</text>
+    </g>
+  </g>
+  <g transform="translate(740,146)">
+    <g class="node enter-5">
+      <rect class="node-shape" x="0" y="0" width="140" height="44" rx="10"/>
+      <text class="node-label" x="70" y="22" text-anchor="middle" dominant-baseline="central">ML Model</text>
+    </g>
+  </g>
+  <g transform="translate(910,146)">
+    <g class="node enter-6">
+      <rect class="node-shape" x="0" y="0" width="140" height="44" rx="10"/>
+      <text class="node-label" x="70" y="22" text-anchor="middle" dominant-baseline="central">API Server</text>
+    </g>
+  </g>
+  <g transform="translate(910,256)">
+    <g class="node enter-6">
+      <rect class="node-shape" x="0" y="0" width="140" height="44" rx="10"/>
+      <text class="node-label" x="70" y="22" text-anchor="middle" dominant-baseline="central">Dashboard</text>
+    </g>
+  </g>
+
+  <text id="subtitle" x="560" y="26" text-anchor="middle" class="diagram-title">Real-time ML Pipeline</text>
+  <text x="560" y="50" text-anchor="middle" class="subtitle">Dark Tech · LR data-flow · animated streaming edges</text>
+
+  <g class="legend" transform="translate(56,388)">
+    <rect class="legend-panel" x="-12" y="-4" width="236" height="104" rx="8"/>
+    <text class="legend-title" x="0" y="14">Legend</text>
+    <line x1="0" y1="36" x2="40" y2="36" class="edge-data edge-animated"/>
+    <text class="legend-text" x="52" y="36" dominant-baseline="middle">data flow</text>
+    <rect x="10" y="52" width="32" height="16" rx="5" class="node-shape"/>
+    <text class="legend-text" x="52" y="60" dominant-baseline="middle">processor / service</text>
+    <rect x="10" y="80" width="32" height="8" class="node-shape"/>
+    <ellipse cx="26" cy="80" rx="16" ry="4" class="node-shape"/>
+    <path d="M 10 88 A 16 4 0 0 0 42 88" class="node-accent"/>
+    <text class="legend-text" x="52" y="84" dominant-baseline="middle">storage</text>
+  </g>
+</svg>

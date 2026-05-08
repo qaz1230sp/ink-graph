@@ -1,0 +1,365 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 824" role="img" aria-labelledby="title subtitle">
+  <title id="title">UFO³ System Architecture</title>
+  <desc>Neon cyber themed layered architecture diagram showing orchestration, agent core, and execution groups.</desc>
+  <rect class="canvas-bg" x="0" y="0" width="100%" height="100%"/>
+  <defs>
+    <filter id="glow-neon" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur"/>
+      <feFlood flood-color="rgba(57,255,20,0.55)" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="glow-pink" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur"/>
+      <feFlood flood-color="rgba(255,0,110,0.45)" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="scan-lines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="transparent"/>
+      <line x1="0" y1="1" x2="4" y2="1" stroke="rgba(224,224,224,0.05)" stroke-width="1"/>
+      <line x1="0" y1="3" x2="4" y2="3" stroke="rgba(224,224,224,0.03)" stroke-width="1"/>
+    </pattern>
+
+    <marker id="arrow-data" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#39ff14"/>
+    </marker>
+    <marker id="arrow-control" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#ff006e"/>
+    </marker>
+    <marker id="arrow-dependency" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#00d4ff"/>
+    </marker>
+    <marker id="arrow-async" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#bf5af2"/>
+    </marker>
+  </defs>
+  <style>
+    :root {
+      --canvas-bg: #0a0a0f;
+      --node-fill: #111118;
+      --node-stroke: #39ff14;
+      --node-stroke-secondary: #ff006e;
+      --text-primary: #39ff14;
+      --text-secondary: #e0e0e0;
+      --text-title: #39ff14;
+      --edge-data: #39ff14;
+      --edge-control: #ff006e;
+      --edge-dependency: #00d4ff;
+      --edge-async: #bf5af2;
+      --group-fill: rgba(17,17,24,0.65);
+      --group-stroke: #ff006e;
+      --group-label: #00d4ff;
+      --glow-color: rgba(57,255,20,0.55);
+      --glow-color-secondary: rgba(255,0,110,0.45);
+      --edge-glow-color: rgba(57,255,20,0.6);
+      --hover-glow-radius: 16px;
+      --flow-duration: 1.2s;
+      --entrance-duration: 0.28s;
+      --entrance-stagger: 0.08s;
+      --pulse-duration: 1.5s;
+    }
+
+    svg {
+      background: var(--canvas-bg);
+      font-family: "Orbitron", "Share Tech Mono", "Rajdhani", monospace;
+    }
+
+    .canvas-bg {
+      fill: var(--canvas-bg);
+    }
+
+    .scanlines {
+      fill: url(#scan-lines);
+      opacity: 0.12;
+      pointer-events: none;
+    }
+
+    .diagram-title {
+      fill: var(--text-title);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .node {
+      animation: cg-node-enter var(--entrance-duration) ease both;
+      animation-delay: calc(var(--enter-index, 0) * var(--entrance-stagger));
+      transform-origin: center;
+    }
+
+    .node-shape {
+      fill: var(--node-fill);
+      stroke: var(--node-stroke);
+      stroke-width: 1.8;
+      filter: url(#glow-neon);
+      transition: filter 0.2s ease, stroke 0.2s ease;
+    }
+
+    .node-secondary .node-shape {
+      stroke: var(--node-stroke-secondary);
+      filter: url(#glow-pink);
+    }
+
+    .node:hover .node-shape {
+      filter: url(#glow-neon) drop-shadow(0 0 var(--hover-glow-radius) var(--glow-color));
+    }
+
+    .node-secondary:hover .node-shape {
+      filter: url(#glow-pink) drop-shadow(0 0 var(--hover-glow-radius) var(--glow-color-secondary));
+    }
+
+    .node-pulse .node-shape {
+      animation: cg-pulse var(--pulse-duration) ease infinite;
+    }
+
+    .node-label {
+      fill: var(--text-primary);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .node-sublabel,
+    .edge-label {
+      fill: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .group-shape {
+      fill: var(--group-fill);
+      stroke: var(--group-stroke);
+      stroke-width: 1.5;
+      stroke-dasharray: 8,4;
+      filter: url(#glow-pink);
+    }
+
+    .group-label {
+      fill: var(--group-label);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+
+    .edge-data,
+    .edge-control,
+    .edge-dependency,
+    .edge-async {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .edge-data { stroke: var(--edge-data); stroke-width: 1.8; marker-end: url(#arrow-data); }
+    .edge-control { stroke: var(--edge-control); stroke-width: 1.8; marker-end: url(#arrow-control); }
+    .edge-dependency { stroke: var(--edge-dependency); stroke-width: 1.8; stroke-dasharray: 6,3; marker-end: url(#arrow-dependency); }
+    .edge-async { stroke: var(--edge-async); stroke-width: 1.8; stroke-dasharray: 4,3; marker-end: url(#arrow-async); }
+
+    .edge-animated {
+      stroke-dasharray: 8,4;
+      animation: cg-edge-flow var(--flow-duration) linear infinite;
+    }
+
+    .edge-glow {
+      animation: cg-edge-glow 2s ease infinite;
+    }
+
+    @keyframes cg-edge-flow {
+      to { stroke-dashoffset: -24; }
+    }
+
+    @keyframes cg-node-enter {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes cg-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    @keyframes cg-edge-glow {
+      0%, 100% { filter: drop-shadow(0 0 4px var(--edge-glow-color)); }
+      50% { filter: drop-shadow(0 0 10px var(--edge-glow-color)); }
+    }
+  </style>
+  <style>
+    .subtitle {
+      fill: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.4px;
+    }
+
+    .group-divider {
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+      stroke-dasharray: 4,4;
+      opacity: 0.72;
+    }
+
+    .legend-panel {
+      fill: rgba(10,10,15,0.72);
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+    }
+
+    .legend-title {
+      fill: var(--group-label);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+    }
+
+    .legend-text {
+      fill: var(--text-primary);
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .edge-no-marker {
+      marker-end: none;
+    }
+
+    .junction-control {
+      fill: var(--edge-control);
+      filter: url(#glow-pink);
+    }
+
+    .junction-data {
+      fill: var(--edge-data);
+      filter: url(#glow-neon);
+    }
+
+    .node-accent {
+      fill: var(--node-stroke);
+      opacity: 0.18;
+    }
+
+    .group-title-bar {
+      fill: rgba(255,0,110,0.10);
+    }
+
+    .enter-0 { --enter-index: 0; }
+    .enter-1 { --enter-index: 1; }
+    .enter-2 { --enter-index: 2; }
+    .enter-3 { --enter-index: 3; }
+    .enter-4 { --enter-index: 4; }
+    .enter-5 { --enter-index: 5; }
+    .enter-6 { --enter-index: 6; }
+    .enter-7 { --enter-index: 7; }
+  </style>
+
+  <g class="groups">
+    <g class="group">
+      <rect class="group-shape" x="180" y="88" width="440" height="260" rx="14"/>
+      <line class="group-divider" x1="180" y1="120" x2="620" y2="120"/>
+      <text class="group-label" x="200" y="109">ORCHESTRATION</text>
+    </g>
+    <g class="group">
+      <rect class="group-shape" x="180" y="376" width="440" height="116" rx="14"/>
+      <line class="group-divider" x1="180" y1="408" x2="620" y2="408"/>
+      <text class="group-label" x="200" y="397">AGENT CORE</text>
+    </g>
+    <g class="group">
+      <rect class="group-shape" x="60" y="520" width="680" height="116" rx="14"/>
+      <line class="group-divider" x1="60" y1="552" x2="740" y2="552"/>
+      <text class="group-label" x="80" y="541">EXECUTION</text>
+    </g>
+  </g>
+
+  <g class="edges">
+    <path class="edge-control edge-no-marker" d="M 400 184 V 236"/>
+    <circle class="junction-control" cx="400" cy="236" r="3"/>
+    <path class="edge-control edge-no-marker" d="M 280 236 H 520"/>
+    <path class="edge-control" d="M 280 236 V 276"/>
+    <path class="edge-control" d="M 520 236 V 276"/>
+    <path class="edge-control" d="M 280 328 V 420"/>
+
+    <path class="edge-data edge-animated edge-glow edge-no-marker" d="M 280 472 V 492"/>
+    <circle class="junction-data" cx="280" cy="492" r="3"/>
+    <path class="edge-data edge-animated edge-glow edge-no-marker" d="M 160 492 H 640"/>
+    <path class="edge-data edge-animated edge-glow" d="M 160 492 V 564"/>
+    <path class="edge-data edge-animated edge-glow" d="M 400 492 V 564"/>
+    <path class="edge-data edge-animated edge-glow" d="M 640 492 V 564"/>
+
+    <path class="edge-dependency" d="M 608 306 H 656 V 450 H 608" marker-start="url(#arrow-dependency)"/>
+  </g>
+
+  <g class="nodes">
+    <g class="node node-pulse enter-0">
+      <rect class="node-shape" x="320" y="140" width="160" height="44" rx="10"/>
+      <text class="node-label" x="400" y="158" text-anchor="middle">Galaxy Server</text>
+      <text class="node-sublabel" x="400" y="172" text-anchor="middle">cloud orchestrator</text>
+    </g>
+
+    <g class="node enter-1">
+      <rect class="node-shape" x="200" y="284" width="160" height="44" rx="10"/>
+      <text class="node-label" x="280" y="302" text-anchor="middle" textLength="136" lengthAdjust="spacingAndGlyphs">Constellation DAG</text>
+      <text class="node-sublabel" x="280" y="316" text-anchor="middle">task graph</text>
+    </g>
+
+    <g class="node node-secondary enter-2">
+      <rect class="node-shape" x="440" y="284" width="160" height="44" rx="10"/>
+      <text class="node-label" x="520" y="302" text-anchor="middle">Knowledge Store</text>
+      <text class="node-sublabel" x="520" y="316" text-anchor="middle">memory</text>
+    </g>
+
+    <g class="node node-pulse enter-3">
+      <rect class="node-shape" x="200" y="428" width="160" height="44" rx="10"/>
+      <text class="node-label" x="280" y="446" text-anchor="middle">AppAgent</text>
+      <text class="node-sublabel" x="280" y="460" text-anchor="middle" textLength="136" lengthAdjust="spacingAndGlyphs">application controller</text>
+    </g>
+
+    <g class="node node-secondary enter-4">
+      <rect class="node-shape" x="440" y="428" width="160" height="44" rx="10"/>
+      <text class="node-label" x="520" y="446" text-anchor="middle" textLength="136" lengthAdjust="spacingAndGlyphs">Experience Manager</text>
+      <text class="node-sublabel" x="520" y="460" text-anchor="middle">learning</text>
+    </g>
+
+    <g class="node enter-5">
+      <rect class="node-shape" x="80" y="572" width="160" height="44" rx="10"/>
+      <text class="node-label" x="160" y="590" text-anchor="middle">UI Executor</text>
+      <text class="node-sublabel" x="160" y="604" text-anchor="middle">GUI</text>
+    </g>
+
+    <g class="node enter-6">
+      <rect class="node-shape" x="320" y="572" width="160" height="44" rx="10"/>
+      <text class="node-label" x="400" y="590" text-anchor="middle">CLI Executor</text>
+      <text class="node-sublabel" x="400" y="604" text-anchor="middle">command line</text>
+    </g>
+
+    <g class="node enter-7">
+      <rect class="node-shape" x="560" y="572" width="160" height="44" rx="10"/>
+      <text class="node-label" x="640" y="590" text-anchor="middle">API Executor</text>
+      <text class="node-sublabel" x="640" y="604" text-anchor="middle">programmatic</text>
+    </g>
+  </g>
+
+  <text x="400" y="24" text-anchor="middle" class="diagram-title">UFO³ System Architecture</text>
+  <text id="subtitle" x="400" y="48" text-anchor="middle" class="subtitle">Neon Cyber · Layered service architecture</text>
+
+  <g class="legend" transform="translate(56,684)">
+    <rect class="legend-panel" x="-12" y="-4" width="172" height="104" rx="8"/>
+    <text class="legend-title" x="0" y="14">Legend</text>
+    <line x1="0" y1="36" x2="40" y2="36" class="edge-control"/>
+    <text class="legend-text" x="52" y="36" dominant-baseline="middle">control</text>
+    <line x1="0" y1="60" x2="40" y2="60" class="edge-data edge-animated edge-glow"/>
+    <text class="legend-text" x="52" y="60" dominant-baseline="middle">data</text>
+    <line x1="0" y1="84" x2="40" y2="84" class="edge-dependency" marker-start="url(#arrow-dependency)"/>
+    <text class="legend-text" x="52" y="84" dominant-baseline="middle">dependency</text>
+  </g>
+</svg>

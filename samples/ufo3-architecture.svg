@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 824" role="img" aria-labelledby="title subtitle">
+  <title id="title">UFO³ System Architecture</title>
+  <desc>Blueprint-themed layered architecture diagram showing orchestration, agent core, and execution layers.</desc>
+  <defs>
+    <pattern id="blueprint-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(224,242,254,0.16)" stroke-width="1"/>
+    </pattern>
+
+    <marker id="arrow-data" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#e0f2fe"/>
+    </marker>
+    <marker id="arrow-control" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#ffffff"/>
+    </marker>
+    <marker id="arrow-dependency" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#bae6fd"/>
+    </marker>
+    <marker id="arrow-async" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#7dd3fc"/>
+    </marker>
+  </defs>
+  <style>
+    :root {
+      --canvas-bg: #1e3a5f;
+      --canvas-grid: rgba(224,242,254,0.16);
+      --node-fill: rgba(30,58,95,0.18);
+      --node-stroke: #e0f2fe;
+      --node-stroke-hover: #e0f2fe;
+      --text-primary: #f8fafc;
+      --text-secondary: #cfe8f7;
+      --text-title: #ffffff;
+      --edge-data: #e0f2fe;
+      --edge-control: #ffffff;
+      --edge-dependency: #bae6fd;
+      --edge-async: #7dd3fc;
+      --group-fill: rgba(30,58,95,0.08);
+      --group-stroke: #93c5fd;
+      --group-label: #e0f2fe;
+      --flow-duration: 4s;
+    }
+
+    svg {
+      background: var(--canvas-bg);
+      font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    .canvas-bg {
+      fill: var(--canvas-bg);
+    }
+
+    .canvas-grid {
+      fill: url(#blueprint-grid);
+    }
+
+    .diagram-title {
+      fill: var(--text-title);
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .node-shape {
+      fill: var(--node-fill);
+      stroke: var(--node-stroke);
+      stroke-width: 1.5;
+      filter: none;
+    }
+
+    .node-label {
+      fill: var(--text-primary);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .node-sublabel,
+    .edge-label {
+      fill: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .group-shape {
+      fill: var(--group-fill);
+      stroke: var(--group-stroke);
+      stroke-width: 1.5;
+      stroke-dasharray: 8,4;
+    }
+
+    .group-label {
+      fill: var(--group-label);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .edge-data,
+    .edge-control,
+    .edge-dependency,
+    .edge-async {
+      fill: none;
+      stroke-linecap: square;
+      stroke-linejoin: miter;
+    }
+
+    .edge-data { stroke: var(--edge-data); stroke-width: 1.5; marker-end: url(#arrow-data); }
+    .edge-control { stroke: var(--edge-control); stroke-width: 1.5; marker-end: url(#arrow-control); }
+    .edge-dependency { stroke: var(--edge-dependency); stroke-width: 1.5; stroke-dasharray: 6,3; marker-end: url(#arrow-dependency); }
+    .edge-async { stroke: var(--edge-async); stroke-width: 1.5; stroke-dasharray: 3,3; marker-end: url(#arrow-async); }
+
+    .edge-animated {
+      stroke-dasharray: 8,4;
+      animation: cg-edge-flow var(--flow-duration) linear infinite;
+    }
+
+    @keyframes cg-edge-flow {
+      to { stroke-dashoffset: -24; }
+    }
+  </style>
+  <style>
+    .subtitle {
+      fill: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .group-divider {
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+      stroke-dasharray: 4,4;
+      opacity: 0.7;
+    }
+
+    .edge-no-marker {
+      marker-end: none;
+    }
+
+    .legend-panel {
+      fill: rgba(30,58,95,0.78);
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+    }
+
+    .legend-title {
+      fill: var(--group-label);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .legend-text {
+      fill: var(--text-primary);
+      font-size: 11px;
+      font-weight: 400;
+    }
+  </style>
+  <rect class="canvas-bg" x="0" y="0" width="100%" height="100%"/>
+  <rect class="canvas-grid" x="0" y="0" width="100%" height="100%"/>
+
+  <text id="subtitle" x="400" y="24" text-anchor="middle" class="diagram-title">UFO³ System Architecture</text>
+  <text x="400" y="48" text-anchor="middle" class="subtitle">Blueprint · Layered service architecture</text>
+
+  <g class="group">
+    <rect class="group-shape" x="180" y="88" width="440" height="260" rx="14"/>
+    <line class="group-divider" x1="180" y1="120" x2="620" y2="120"/>
+    <text class="group-label" x="200" y="109">ORCHESTRATION</text>
+  </g>
+  <g class="group">
+    <rect class="group-shape" x="180" y="376" width="440" height="116" rx="14"/>
+    <line class="group-divider" x1="180" y1="408" x2="620" y2="408"/>
+    <text class="group-label" x="200" y="397">AGENT CORE</text>
+  </g>
+  <g class="group">
+    <rect class="group-shape" x="60" y="520" width="680" height="116" rx="14"/>
+    <line class="group-divider" x1="60" y1="552" x2="740" y2="552"/>
+    <text class="group-label" x="80" y="541">EXECUTION</text>
+  </g>
+
+  <g class="edges">
+    <path class="edge-control edge-no-marker" d="M 400 184 V 236"/>
+    <path class="edge-control" d="M 400 236 H 280 V 276"/>
+    <path class="edge-control" d="M 400 236 H 520 V 276"/>
+    <path class="edge-control" d="M 280 328 V 420"/>
+
+    <path class="edge-data edge-animated edge-no-marker" d="M 280 472 V 548"/>
+    <path class="edge-data edge-animated" d="M 280 548 H 160 V 564"/>
+    <path class="edge-data edge-animated" d="M 280 472 H 300 V 532 H 400 V 564"/>
+    <path class="edge-data edge-animated" d="M 280 548 H 640 V 564"/>
+
+    <path class="edge-dependency" d="M 600 306 H 656 V 450 H 600" marker-start="url(#arrow-dependency)"/>
+  </g>
+
+  <g class="node" transform="translate(320,140)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="10"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">Galaxy Server</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">cloud orchestrator</text>
+  </g>
+  <g class="node" transform="translate(200,284)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="10"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">Constellation DAG</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">task graph</text>
+  </g>
+  <g class="node" transform="translate(440,284)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="10"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">Knowledge Store</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">memory</text>
+  </g>
+  <g class="node" transform="translate(200,428)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="10"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">AppAgent</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">application controller</text>
+  </g>
+  <g class="node" transform="translate(440,428)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="10"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">Experience Manager</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">learning</text>
+  </g>
+  <g class="node" transform="translate(80,572)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="10"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">UI Executor</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">GUI</text>
+  </g>
+  <g class="node" transform="translate(320,572)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="10"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">CLI Executor</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">command line</text>
+  </g>
+  <g class="node" transform="translate(560,572)">
+    <rect class="node-shape" x="0" y="0" width="160" height="44" rx="10"/>
+    <text class="node-label" x="80" y="18" text-anchor="middle">API Executor</text>
+    <text class="node-sublabel" x="80" y="32" text-anchor="middle">programmatic</text>
+  </g>
+
+  <g class="legend" transform="translate(56,684)">
+    <rect class="legend-panel" x="-12" y="-4" width="172" height="104" rx="8"/>
+    <text class="legend-title" x="0" y="14">Legend</text>
+    <line x1="0" y1="36" x2="40" y2="36" class="edge-control"/>
+    <text class="legend-text" x="52" y="36" dominant-baseline="middle">control</text>
+    <line x1="0" y1="60" x2="40" y2="60" class="edge-data edge-animated"/>
+    <text class="legend-text" x="52" y="60" dominant-baseline="middle">data</text>
+    <line x1="0" y1="84" x2="40" y2="84" class="edge-dependency" marker-start="url(#arrow-dependency)"/>
+    <text class="legend-text" x="52" y="84" dominant-baseline="middle">dependency</text>
+  </g>
+</svg>

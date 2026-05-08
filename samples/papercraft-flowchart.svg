@@ -1,0 +1,295 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1040" role="img" aria-labelledby="svg-title svg-desc">
+  <title id="svg-title">Code Review Process</title>
+  <desc id="svg-desc">Papercraft flowchart showing a pull request moving through lint, testing, review, revision loops, merge, and completion.</desc>
+  <defs>
+    <filter id="paper-shadow" x="-5%" y="-5%" width="115%" height="120%">
+      <feGaussianBlur stdDeviation="2" in="SourceAlpha" result="blur"/>
+      <feOffset dx="2" dy="3" result="offset"/>
+      <feFlood flood-color="#000000" flood-opacity="0.12" result="color"/>
+      <feComposite in="color" in2="offset" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="paper-texture" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="4" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="gray"/>
+      <feBlend in="SourceGraphic" in2="gray" mode="multiply" result="textured"/>
+    </filter>
+
+    <marker id="arrow-data" viewBox="0 0 6 6" refX="5.2" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0.8 0.6 Q 1.5 0.8 4.8 3 Q 1.5 5.2 0.8 5.4 Q 1.9 3 0.8 0.6 Z" fill="#5c8a97"/>
+    </marker>
+    <marker id="arrow-control" viewBox="0 0 6 6" refX="5.2" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0.8 0.6 Q 1.5 0.8 4.8 3 Q 1.5 5.2 0.8 5.4 Q 1.9 3 0.8 0.6 Z" fill="#7a7a7a"/>
+    </marker>
+    <marker id="arrow-dependency" viewBox="0 0 6 6" refX="5.2" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0.8 0.6 Q 1.5 0.8 4.8 3 Q 1.5 5.2 0.8 5.4 Q 1.9 3 0.8 0.6 Z" fill="#c0735e"/>
+    </marker>
+  </defs>
+
+  <style>
+    :root {
+      --canvas-bg: #faf6f0;
+      --text-primary: #4a4a4a;
+      --text-secondary: #7a7a7a;
+      --text-title: #3a3a3a;
+      --edge-data: #5c8a97;
+      --edge-control: #7a7a7a;
+      --edge-dependency: #c0735e;
+      --group-stroke: #c0c0c0;
+      --group-label: #5a5a5a;
+      --flow-duration: 3s;
+    }
+
+    svg {
+      background: var(--canvas-bg);
+      font-family: "Patrick Hand", "Comic Neue", "Segoe Print", cursive;
+    }
+
+    .canvas-bg {
+      fill: var(--canvas-bg);
+    }
+
+    .canvas-texture {
+      fill: #f0e8dc;
+      opacity: 0.1;
+      filter: url(#paper-texture);
+      pointer-events: none;
+    }
+
+    .diagram-title {
+      fill: var(--text-title);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .subtitle {
+      fill: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .group-shape {
+      fill: transparent;
+      stroke: var(--group-stroke);
+      stroke-width: 1.4;
+      stroke-dasharray: 6 5;
+    }
+
+    .group-divider {
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+      stroke-dasharray: 4 6;
+    }
+
+    .group-label {
+      fill: var(--group-label);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .tape {
+      fill: rgba(255,255,255,0.48);
+      stroke: rgba(192,192,192,0.35);
+      stroke-width: 1;
+    }
+
+    .node-shape {
+      stroke: none;
+      filter: url(#paper-shadow);
+    }
+
+    .node-orch .node-shape { fill: #b8d4e3; }
+    .node-core .node-shape { fill: #c8e6c9; }
+    .node-exec .node-shape { fill: #ffe0b2; }
+
+    .node-label {
+      fill: var(--text-primary);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .node-sublabel {
+      fill: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .edge-data,
+    .edge-control,
+    .edge-dependency {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .edge-control {
+      stroke: var(--edge-control);
+      stroke-width: 1.5;
+      marker-end: url(#arrow-control);
+    }
+
+    .edge-data {
+      stroke: var(--edge-data);
+      stroke-width: 1.5;
+      marker-end: url(#arrow-data);
+    }
+
+    .edge-dependency {
+      stroke: var(--edge-dependency);
+      stroke-width: 1.5;
+      stroke-dasharray: 7 5;
+      marker-end: url(#arrow-dependency);
+    }
+
+    .edge-no-marker {
+      marker-end: none;
+    }
+
+    .edge-bidirectional {
+      marker-start: url(#arrow-dependency);
+    }
+
+    .edge-animated {
+      stroke-dasharray: 8 4;
+      animation: cg-edge-flow var(--flow-duration) linear infinite;
+    }
+
+    @keyframes cg-edge-flow {
+      to { stroke-dashoffset: -24; }
+    }
+
+    .junction-pin {
+      fill: var(--edge-dependency);
+    }
+
+    .legend-panel {
+      fill: rgba(250,246,240,0.92);
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+    }
+
+    .legend-title {
+      fill: var(--group-label);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .legend-text {
+      fill: var(--text-primary);
+      font-size: 11px;
+      font-weight: 500;
+    }
+  </style>
+
+  <rect class="canvas-bg" x="0" y="0" width="720" height="1040"/>
+  <rect class="canvas-texture" x="0" y="0" width="720" height="1040"/>
+
+  <text x="360" y="34" text-anchor="middle" class="diagram-title">Code Review Process</text>
+
+  <g class="edges">
+    <path class="edge-data" d="M 360 130 V 202"/>
+    <path class="edge-data" d="M 360 254 V 326"/>
+    <path class="edge-data" d="M 360 378 V 450"/>
+    <path class="edge-data" d="M 450 486 H 512"/>
+    <path class="edge-data" d="M 360 514 V 586"/>
+    <path class="edge-data" d="M 670 486 H 692 V 232 H 442"/>
+    <path class="edge-data" d="M 360 638 V 710"/>
+    <path class="edge-data" d="M 450 746 H 512"/>
+    <path class="edge-data" d="M 360 774 V 846"/>
+    <path class="edge-data" d="M 670 746 H 692 V 616 H 442"/>
+    <path class="edge-data" d="M 360 898 V 970"/>
+  </g>
+
+  <g class="node node-core" transform="translate(290,86)">
+    <rect class="node-shape" x="0" y="0" width="140" height="44" rx="22" ry="22"/>
+    <text class="node-label" x="70" y="22" text-anchor="middle" dominant-baseline="middle">Start</text>
+  </g>
+
+  <g class="node node-orch" transform="translate(270,210)">
+    <rect class="node-shape" x="0" y="0" width="180" height="44" rx="8" ry="8"/>
+    <text class="node-label" x="90" y="22" text-anchor="middle" dominant-baseline="middle">Submit PR</text>
+  </g>
+
+  <g class="node node-orch" transform="translate(270,334)">
+    <rect class="node-shape" x="0" y="0" width="180" height="44" rx="8" ry="8"/>
+    <text class="node-label" x="90" y="22" text-anchor="middle" dominant-baseline="middle">Lint &amp; Test</text>
+  </g>
+
+  <g class="node node-exec" transform="translate(270,458)">
+    <polygon class="node-shape" points="90,0 180,28 90,56 0,28"/>
+    <text class="node-label" x="90" y="28" text-anchor="middle" dominant-baseline="middle">Pass?</text>
+  </g>
+
+  <g class="node node-orch" transform="translate(520,464)">
+    <rect class="node-shape" x="0" y="0" width="150" height="44" rx="8" ry="8"/>
+    <text class="node-label" x="75" y="22" text-anchor="middle" dominant-baseline="middle">Fix Issues</text>
+  </g>
+
+  <g class="node node-orch" transform="translate(270,594)">
+    <rect class="node-shape" x="0" y="0" width="180" height="44" rx="8" ry="8"/>
+    <text class="node-label" x="90" y="22" text-anchor="middle" dominant-baseline="middle">Code Review</text>
+  </g>
+
+  <g class="node node-exec" transform="translate(270,718)">
+    <polygon class="node-shape" points="90,0 180,28 90,56 0,28"/>
+    <text class="node-label" x="90" y="28" text-anchor="middle" dominant-baseline="middle">Approved?</text>
+  </g>
+
+  <g class="node node-orch" transform="translate(520,724)">
+    <rect class="node-shape" x="0" y="0" width="150" height="44" rx="8" ry="8"/>
+    <text class="node-label" x="75" y="22" text-anchor="middle" dominant-baseline="middle">Revise Code</text>
+  </g>
+
+  <g class="node node-orch" transform="translate(270,854)">
+    <rect class="node-shape" x="0" y="0" width="180" height="44" rx="8" ry="8"/>
+    <text class="node-label" x="90" y="22" text-anchor="middle" dominant-baseline="middle">Merge to Main</text>
+  </g>
+
+  <g class="node node-core" transform="translate(290,978)">
+    <rect class="node-shape" x="0" y="0" width="140" height="44" rx="22" ry="22"/>
+    <text class="node-label" x="70" y="22" text-anchor="middle" dominant-baseline="middle">End</text>
+  </g>
+
+  <g class="labels">
+    <rect x="468" y="463" width="26" height="16" rx="4" fill="#faf6f0" opacity="0.95"/>
+    <text class="node-sublabel" x="481" y="471" text-anchor="middle" dominant-baseline="middle">No</text>
+
+    <rect x="370" y="542" width="28" height="16" rx="4" fill="#faf6f0" opacity="0.95"/>
+    <text class="node-sublabel" x="384" y="550" text-anchor="middle" dominant-baseline="middle">Yes</text>
+
+    <rect x="468" y="723" width="26" height="16" rx="4" fill="#faf6f0" opacity="0.95"/>
+    <text class="node-sublabel" x="481" y="731" text-anchor="middle" dominant-baseline="middle">No</text>
+
+    <rect x="370" y="802" width="28" height="16" rx="4" fill="#faf6f0" opacity="0.95"/>
+    <text class="node-sublabel" x="384" y="810" text-anchor="middle" dominant-baseline="middle">Yes</text>
+  </g>
+
+  <g class="legend" transform="translate(52,848)">
+    <rect class="legend-panel" x="-12" y="-4" width="196" height="128" rx="8"/>
+    <text class="legend-title" x="0" y="14">Legend</text>
+
+    <g class="node node-core" transform="translate(0,27)">
+      <rect class="node-shape" x="0" y="0" width="40" height="18" rx="9" ry="9"/>
+    </g>
+    <text class="legend-text" x="52" y="36" dominant-baseline="middle">start / end</text>
+
+    <g class="node node-orch" transform="translate(0,51)">
+      <rect class="node-shape" x="0" y="0" width="40" height="18" rx="6" ry="6"/>
+    </g>
+    <text class="legend-text" x="52" y="60" dominant-baseline="middle">action</text>
+
+    <g class="node node-exec" transform="translate(0,75)">
+      <polygon class="node-shape" points="20,0 40,9 20,18 0,9"/>
+    </g>
+    <text class="legend-text" x="52" y="84" dominant-baseline="middle">decision</text>
+
+    <line x1="0" y1="108" x2="40" y2="108" class="edge-data"/>
+    <text class="legend-text" x="52" y="108" dominant-baseline="middle">control flow</text>
+  </g>
+</svg>

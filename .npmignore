@@ -1,0 +1,11 @@
+# Development files
+.git/
+.github/
+.vscode/
+.editorconfig
+
+# Session/local files
+.copilot/
+
+# Not needed for skill usage
+node_modules/

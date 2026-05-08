@@ -1,0 +1,294 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 840" role="img" aria-labelledby="svg-title svg-desc">
+  <title id="svg-title">Papercraft System Architecture</title>
+  <desc id="svg-desc">Paper craft layered architecture diagram showing orchestration, agent core, and execution groups.</desc>
+  <defs>
+    <filter id="paper-shadow" x="-5%" y="-5%" width="115%" height="120%">
+      <feGaussianBlur stdDeviation="2" in="SourceAlpha" result="blur"/>
+      <feOffset dx="2" dy="3" result="offset"/>
+      <feFlood flood-color="#000000" flood-opacity="0.12" result="color"/>
+      <feComposite in="color" in2="offset" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="paper-texture" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="4" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="gray"/>
+      <feBlend in="SourceGraphic" in2="gray" mode="multiply" result="textured"/>
+    </filter>
+
+    <marker id="arrow-data" viewBox="0 0 6 6" refX="5.2" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0.8 0.6 Q 1.5 0.8 4.8 3 Q 1.5 5.2 0.8 5.4 Q 1.9 3 0.8 0.6 Z" fill="#5c8a97"/>
+    </marker>
+    <marker id="arrow-control" viewBox="0 0 6 6" refX="5.2" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0.8 0.6 Q 1.5 0.8 4.8 3 Q 1.5 5.2 0.8 5.4 Q 1.9 3 0.8 0.6 Z" fill="#7a7a7a"/>
+    </marker>
+    <marker id="arrow-dependency" viewBox="0 0 6 6" refX="5.2" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0.8 0.6 Q 1.5 0.8 4.8 3 Q 1.5 5.2 0.8 5.4 Q 1.9 3 0.8 0.6 Z" fill="#c0735e"/>
+    </marker>
+  </defs>
+
+  <style>
+    :root {
+      --canvas-bg: #faf6f0;
+      --text-primary: #4a4a4a;
+      --text-secondary: #7a7a7a;
+      --text-title: #3a3a3a;
+      --edge-data: #5c8a97;
+      --edge-control: #7a7a7a;
+      --edge-dependency: #c0735e;
+      --group-stroke: #c0c0c0;
+      --group-label: #5a5a5a;
+      --flow-duration: 3s;
+    }
+
+    svg {
+      background: var(--canvas-bg);
+      font-family: "Patrick Hand", "Comic Neue", "Segoe Print", cursive;
+    }
+
+    .canvas-bg {
+      fill: var(--canvas-bg);
+    }
+
+    .canvas-texture {
+      fill: #f0e8dc;
+      opacity: 0.1;
+      filter: url(#paper-texture);
+      pointer-events: none;
+    }
+
+    .diagram-title {
+      fill: var(--text-title);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .subtitle {
+      fill: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .group-shape {
+      fill: transparent;
+      stroke: var(--group-stroke);
+      stroke-width: 1.4;
+      stroke-dasharray: 6 5;
+    }
+
+    .group-divider {
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+      stroke-dasharray: 4 6;
+    }
+
+    .group-label {
+      fill: var(--group-label);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .tape {
+      fill: rgba(255,255,255,0.48);
+      stroke: rgba(192,192,192,0.35);
+      stroke-width: 1;
+    }
+
+    .node-shape {
+      stroke: none;
+      filter: url(#paper-shadow);
+    }
+
+    .node-orch .node-shape { fill: #b8d4e3; }
+    .node-core .node-shape { fill: #c8e6c9; }
+    .node-exec .node-shape { fill: #ffe0b2; }
+
+    .node-label {
+      fill: var(--text-primary);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .node-sublabel {
+      fill: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .edge-data,
+    .edge-control,
+    .edge-dependency {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .edge-control {
+      stroke: var(--edge-control);
+      stroke-width: 1.5;
+      marker-end: url(#arrow-control);
+    }
+
+    .edge-data {
+      stroke: var(--edge-data);
+      stroke-width: 1.5;
+      marker-end: url(#arrow-data);
+    }
+
+    .edge-dependency {
+      stroke: var(--edge-dependency);
+      stroke-width: 1.5;
+      stroke-dasharray: 7 5;
+      marker-end: url(#arrow-dependency);
+    }
+
+    .edge-no-marker {
+      marker-end: none;
+    }
+
+    .edge-bidirectional {
+      marker-start: url(#arrow-dependency);
+    }
+
+    .edge-animated {
+      stroke-dasharray: 8 4;
+      animation: cg-edge-flow var(--flow-duration) linear infinite;
+    }
+
+    @keyframes cg-edge-flow {
+      to { stroke-dashoffset: -24; }
+    }
+
+    .junction-pin {
+      fill: var(--edge-dependency);
+    }
+
+    .legend-panel {
+      fill: rgba(250,246,240,0.92);
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+    }
+
+    .legend-title {
+      fill: var(--group-label);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .legend-text {
+      fill: var(--text-primary);
+      font-size: 11px;
+      font-weight: 500;
+    }
+  </style>
+
+  <rect class="canvas-bg" x="0" y="0" width="820" height="840"/>
+  <rect class="canvas-texture" x="0" y="0" width="820" height="840"/>
+
+  <text x="410" y="32" text-anchor="middle" class="diagram-title">Papercraft System Architecture</text>
+  <text x="410" y="58" text-anchor="middle" class="subtitle">Paper Craft · Layered handmade architecture</text>
+
+  <g class="group">
+    <rect class="group-shape" x="180" y="108" width="460" height="280" rx="18"/>
+    <line class="group-divider" x1="180" y1="140" x2="640" y2="140"/>
+    <text class="group-label" x="202" y="130">ORCHESTRATION</text>
+    <rect class="tape" x="196" y="96" width="40" height="12" rx="3" transform="rotate(-8 216 102)"/>
+  </g>
+
+  <g class="group">
+    <rect class="group-shape" x="180" y="420" width="460" height="124" rx="18"/>
+    <line class="group-divider" x1="180" y1="452" x2="640" y2="452"/>
+    <text class="group-label" x="202" y="442">AGENT CORE</text>
+    <rect class="tape" x="196" y="408" width="40" height="12" rx="3" transform="rotate(-8 216 414)"/>
+  </g>
+
+  <g class="group">
+    <rect class="group-shape" x="70" y="576" width="680" height="124" rx="18"/>
+    <line class="group-divider" x1="70" y1="608" x2="750" y2="608"/>
+    <text class="group-label" x="92" y="598">EXECUTION</text>
+    <rect class="tape" x="86" y="564" width="40" height="12" rx="3" transform="rotate(-8 106 570)"/>
+  </g>
+
+  <g class="edges">
+    <path class="edge-control edge-no-marker" d="M 410 212 V 254"/>
+    <path class="edge-control edge-no-marker" d="M 290 254 H 530"/>
+    <path class="edge-control" d="M 290 254 V 298"/>
+    <path class="edge-control" d="M 530 254 V 298"/>
+    <circle class="junction-pin" cx="410" cy="254" r="3"/>
+
+    <path class="edge-control" d="M 290 356 V 460"/>
+
+    <path class="edge-data edge-animated edge-no-marker" d="M 290 518 V 552"/>
+    <path class="edge-data edge-animated edge-no-marker" d="M 170 552 H 650"/>
+    <path class="edge-data edge-animated" d="M 170 552 V 612"/>
+    <path class="edge-data edge-animated" d="M 410 552 V 612"/>
+    <path class="edge-data edge-animated" d="M 650 552 V 612"/>
+    <circle class="junction-pin" cx="290" cy="552" r="3"/>
+
+    <path class="edge-dependency edge-bidirectional" d="M 530 356 V 460"/>
+  </g>
+
+  <g class="node node-orch" transform="translate(330,162)">
+    <rect class="node-shape" x="0" y="0" width="160" height="50" rx="8"/>
+    <text class="node-label" x="80" y="22" text-anchor="middle">Galaxy Server</text>
+    <text class="node-sublabel" x="80" y="37" text-anchor="middle">cloud orchestrator</text>
+  </g>
+
+  <g class="node node-orch" transform="translate(210,306)">
+    <rect class="node-shape" x="0" y="0" width="160" height="50" rx="8"/>
+    <text class="node-label" x="80" y="22" text-anchor="middle">Constellation DAG</text>
+    <text class="node-sublabel" x="80" y="37" text-anchor="middle">task graph</text>
+  </g>
+
+  <g class="node node-orch" transform="translate(450,306)">
+    <rect class="node-shape" x="0" y="0" width="160" height="50" rx="8"/>
+    <text class="node-label" x="80" y="22" text-anchor="middle">Knowledge Store</text>
+    <text class="node-sublabel" x="80" y="37" text-anchor="middle">memory</text>
+  </g>
+
+  <g class="node node-core" transform="translate(210,468)">
+    <rect class="node-shape" x="0" y="0" width="160" height="50" rx="8"/>
+    <text class="node-label" x="80" y="22" text-anchor="middle">AppAgent</text>
+    <text class="node-sublabel" x="80" y="37" text-anchor="middle" textLength="122" lengthAdjust="spacingAndGlyphs">application controller</text>
+  </g>
+
+  <g class="node node-core" transform="translate(450,468)">
+    <rect class="node-shape" x="0" y="0" width="160" height="50" rx="8"/>
+    <text class="node-label" x="80" y="22" text-anchor="middle">Experience Manager</text>
+    <text class="node-sublabel" x="80" y="37" text-anchor="middle">learning</text>
+  </g>
+
+  <g class="node node-exec" transform="translate(90,620)">
+    <rect class="node-shape" x="0" y="0" width="160" height="50" rx="8"/>
+    <text class="node-label" x="80" y="22" text-anchor="middle">UI Executor</text>
+    <text class="node-sublabel" x="80" y="37" text-anchor="middle">GUI</text>
+  </g>
+
+  <g class="node node-exec" transform="translate(330,620)">
+    <rect class="node-shape" x="0" y="0" width="160" height="50" rx="8"/>
+    <text class="node-label" x="80" y="22" text-anchor="middle">CLI Executor</text>
+    <text class="node-sublabel" x="80" y="37" text-anchor="middle">command line</text>
+  </g>
+
+  <g class="node node-exec" transform="translate(570,620)">
+    <rect class="node-shape" x="0" y="0" width="160" height="50" rx="8"/>
+    <text class="node-label" x="80" y="22" text-anchor="middle">API Executor</text>
+    <text class="node-sublabel" x="80" y="37" text-anchor="middle">programmatic</text>
+  </g>
+
+  <g class="legend" transform="translate(56,724)">
+    <rect class="legend-panel" x="-12" y="-4" width="188" height="104" rx="8"/>
+    <text class="legend-title" x="0" y="14">Legend</text>
+    <line x1="0" y1="36" x2="40" y2="36" class="edge-control"/>
+    <text class="legend-text" x="52" y="36" dominant-baseline="middle">control</text>
+    <line x1="0" y1="60" x2="40" y2="60" class="edge-data edge-animated"/>
+    <text class="legend-text" x="52" y="60" dominant-baseline="middle">data flow</text>
+    <line x1="0" y1="84" x2="40" y2="84" class="edge-dependency edge-bidirectional"/>
+    <text class="legend-text" x="52" y="84" dominant-baseline="middle">dependency</text>
+  </g>
+</svg>

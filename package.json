@@ -1,0 +1,46 @@
+{
+  "name": "ink-graph",
+  "version": "1.0.0",
+  "description": "AI Agent Skill for generating beautiful, animated SVG technical diagrams with 11 themes and 14 diagram types",
+  "main": "SKILL.md",
+  "keywords": [
+    "copilot-skill",
+    "claude-code",
+    "agent-skill",
+    "svg",
+    "diagram",
+    "architecture",
+    "flowchart",
+    "sequence-diagram",
+    "data-flow",
+    "mind-map",
+    "visualization",
+    "animated-svg",
+    "technical-diagram"
+  ],
+  "author": "qaz1230sp",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qaz1230sp/ink-graph.git"
+  },
+  "bugs": {
+    "url": "https://github.com/qaz1230sp/ink-graph/issues"
+  },
+  "homepage": "https://github.com/qaz1230sp/ink-graph#readme",
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "README.zh.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "references/",
+    "samples/",
+    "scripts/",
+    "prompts/",
+    "docs/"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

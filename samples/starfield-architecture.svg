@@ -1,0 +1,308 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="840" viewBox="0 0 820 840" role="img" aria-labelledby="title subtitle">
+  <title id="title">UFO³ System Architecture</title>
+  <desc>Starfield-themed architecture diagram showing orchestration, agent core, and execution layers.</desc>
+  <rect x="0" y="0" width="820" height="840" fill="url(#space-bg)"/>
+  <defs>
+    <radialGradient id="space-bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#0d1b2a"/>
+      <stop offset="100%" stop-color="#050a14"/>
+    </radialGradient>
+    <radialGradient id="nebula1" cx="20%" cy="25%" r="35%">
+      <stop offset="0%" stop-color="#7850b4" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#7850b4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="nebula2" cx="80%" cy="65%" r="30%">
+      <stop offset="0%" stop-color="#50b4c8" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#50b4c8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="nebula3" cx="34%" cy="82%" r="28%">
+      <stop offset="0%" stop-color="#5f7fd6" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#5f7fd6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="star-glow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="2" in="SourceGraphic" result="blur"/>
+      <feFlood flood-color="#7eb8da" flood-opacity="0.2" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <marker id="marker-data" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#7eb8da"/>
+    </marker>
+    <marker id="marker-control" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#c0a0e0"/>
+    </marker>
+    <marker id="marker-dependency" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#e8a060"/>
+    </marker>
+  </defs>
+  <style>
+    svg {
+      font-family: "Inter", "Segoe UI", sans-serif;
+    }
+
+    .diagram-title {
+      fill: #ffffff;
+      font-size: 24px;
+      font-weight: 300;
+      letter-spacing: 3px;
+    }
+
+    .diagram-subtitle {
+      fill: #8aacc0;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1.2px;
+    }
+
+    .group-box {
+      fill: rgba(126,184,218,0.04);
+      stroke: rgba(126,184,218,0.25);
+      stroke-width: 0.5;
+    }
+
+    .group-label {
+      fill: #7eb8da;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+    }
+
+    .node-label {
+      fill: #e0e8f0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .node-sublabel {
+      fill: #8aacc0;
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .node-shape {
+      fill: rgba(13,27,42,0.85);
+      stroke: #7eb8da;
+      stroke-width: 1;
+      filter: url(#star-glow);
+    }
+
+    .edge,
+    .edge-trunk {
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .edge-data {
+      stroke: #7eb8da;
+      marker-end: url(#marker-data);
+    }
+
+    .edge-control {
+      stroke: #c0a0e0;
+      marker-end: url(#marker-control);
+    }
+
+    .edge-dependency {
+      stroke: #e8a060;
+      stroke-dasharray: 6 4;
+      marker-end: url(#marker-dependency);
+    }
+
+    .edge-animated {
+      stroke-dasharray: 8 4;
+      animation: edge-flow 2.5s linear infinite;
+    }
+
+    .control-trunk {
+      stroke: #c0a0e0;
+    }
+
+    .data-trunk {
+      stroke: #7eb8da;
+      stroke-dasharray: 8 4;
+      animation: edge-flow 2.5s linear infinite;
+    }
+
+    .junction-control {
+      fill: #c0a0e0;
+      opacity: 0.85;
+    }
+
+    .junction-data {
+      fill: #7eb8da;
+      opacity: 0.85;
+    }
+
+    .legend-panel {
+      fill: rgba(5,10,20,0.9);
+      stroke: #7eb8da;
+      stroke-width: 1;
+    }
+
+    .legend-title {
+      fill: #7eb8da;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+    }
+
+    .legend-text {
+      fill: #e0e8f0;
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .star-twinkle {
+      animation: twinkle 4s ease-in-out infinite;
+    }
+
+    .tw1 { animation-delay: 0s; }
+    .tw2 { animation-delay: 0.6s; }
+    .tw3 { animation-delay: 1.2s; }
+    .tw4 { animation-delay: 1.8s; }
+    .tw5 { animation-delay: 2.4s; }
+    .tw6 { animation-delay: 3s; }
+
+    @keyframes edge-flow {
+      to { stroke-dashoffset: -24; }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 0.3; }
+    }
+  </style>
+  <rect x="0" y="0" width="820" height="840" fill="url(#nebula1)"/>
+  <rect x="0" y="0" width="820" height="840" fill="url(#nebula2)"/>
+  <rect x="0" y="0" width="820" height="840" fill="url(#nebula3)"/>
+
+  <g class="stars">
+    <circle class="star-twinkle tw1" cx="44" cy="34" r="1.1" fill="#ffffff"/>
+    <circle cx="92" cy="26" r="0.6" fill="#c0d8ff" opacity="0.52"/>
+    <circle cx="146" cy="52" r="0.4" fill="#ffffff" opacity="0.42"/>
+    <circle cx="210" cy="32" r="0.9" fill="#c0d8ff" opacity="0.64"/>
+    <circle cx="278" cy="58" r="0.5" fill="#ffffff" opacity="0.36"/>
+    <circle cx="346" cy="24" r="0.8" fill="#c0d8ff" opacity="0.58"/>
+    <circle class="star-twinkle tw2" cx="412" cy="46" r="1.0" fill="#ffffff"/>
+    <circle cx="478" cy="30" r="0.4" fill="#ffffff" opacity="0.32"/>
+    <circle cx="548" cy="62" r="0.7" fill="#c0d8ff" opacity="0.54"/>
+    <circle cx="612" cy="28" r="0.5" fill="#ffffff" opacity="0.44"/>
+    <circle cx="690" cy="50" r="0.9" fill="#c0d8ff" opacity="0.6"/>
+    <circle cx="760" cy="34" r="0.6" fill="#ffffff" opacity="0.48"/>
+    <circle class="star-twinkle tw3" cx="790" cy="78" r="1.2" fill="#c0d8ff"/>
+    <circle cx="24" cy="118" r="0.5" fill="#ffffff" opacity="0.34"/>
+    <circle cx="56" cy="168" r="0.8" fill="#c0d8ff" opacity="0.62"/>
+    <circle cx="82" cy="246" r="0.4" fill="#ffffff" opacity="0.46"/>
+    <circle cx="38" cy="338" r="0.7" fill="#c0d8ff" opacity="0.56"/>
+    <circle cx="96" cy="420" r="0.6" fill="#ffffff" opacity="0.38"/>
+    <circle class="star-twinkle tw4" cx="30" cy="512" r="1.0" fill="#ffffff"/>
+    <circle cx="64" cy="602" r="0.5" fill="#c0d8ff" opacity="0.5"/>
+    <circle cx="28" cy="744" r="0.8" fill="#ffffff" opacity="0.42"/>
+    <circle cx="96" cy="800" r="0.4" fill="#c0d8ff" opacity="0.3"/>
+    <circle cx="786" cy="110" r="0.6" fill="#ffffff" opacity="0.36"/>
+    <circle cx="742" cy="176" r="0.9" fill="#c0d8ff" opacity="0.58"/>
+    <circle cx="782" cy="264" r="0.5" fill="#ffffff" opacity="0.4"/>
+    <circle cx="728" cy="348" r="0.7" fill="#c0d8ff" opacity="0.52"/>
+    <circle class="star-twinkle tw5" cx="764" cy="432" r="1.1" fill="#ffffff"/>
+    <circle cx="726" cy="524" r="0.4" fill="#c0d8ff" opacity="0.34"/>
+    <circle cx="786" cy="612" r="0.8" fill="#ffffff" opacity="0.56"/>
+    <circle cx="742" cy="732" r="0.5" fill="#c0d8ff" opacity="0.48"/>
+    <circle cx="790" cy="804" r="0.7" fill="#ffffff" opacity="0.42"/>
+    <circle cx="178" cy="398" r="0.5" fill="#c0d8ff" opacity="0.4"/>
+    <circle cx="410" cy="398" r="0.7" fill="#ffffff" opacity="0.34"/>
+    <circle cx="650" cy="400" r="0.4" fill="#c0d8ff" opacity="0.46"/>
+    <circle cx="210" cy="552" r="0.6" fill="#ffffff" opacity="0.38"/>
+    <circle class="star-twinkle tw6" cx="410" cy="552" r="0.9" fill="#c0d8ff"/>
+    <circle cx="620" cy="552" r="0.5" fill="#ffffff" opacity="0.44"/>
+  </g>
+
+  <g class="group">
+    <rect class="group-box" x="160" y="100" width="500" height="284" rx="12"/>
+    <text class="group-label" x="180" y="124">Orchestration</text>
+  </g>
+  <g class="group">
+    <rect class="group-box" x="220" y="412" width="440" height="128" rx="12"/>
+    <text class="group-label" x="240" y="436">Agent Core</text>
+  </g>
+  <g class="group">
+    <rect class="group-box" x="40" y="568" width="720" height="128" rx="12"/>
+    <text class="group-label" x="60" y="592">Execution</text>
+  </g>
+
+  <g class="edges">
+    <path class="edge-trunk control-trunk" d="M 410 208 V 252"/>
+    <circle class="junction-control" cx="410" cy="252" r="3"/>
+    <path class="edge-trunk control-trunk" d="M 270 252 H 550"/>
+    <path class="edge edge-control" d="M 270 252 V 300"/>
+    <path class="edge edge-control" d="M 550 252 V 300"/>
+    <path class="edge edge-control" d="M 270 364 V 410 H 320 V 456"/>
+    <path class="edge edge-dependency" d="M 540 364 V 456"/>
+    <path class="edge edge-dependency" d="M 560 464 V 372"/>
+    <path class="edge-trunk data-trunk" d="M 320 520 V 592"/>
+    <circle class="junction-data" cx="320" cy="592" r="3"/>
+    <path class="edge-trunk data-trunk" d="M 150 592 H 670"/>
+    <path class="edge edge-data edge-animated" d="M 150 592 V 612"/>
+    <path class="edge edge-data edge-animated" d="M 410 592 V 612"/>
+    <path class="edge edge-data edge-animated" d="M 670 592 V 612"/>
+  </g>
+
+  <g class="node" transform="translate(320,152)">
+    <rect class="node-shape" x="0" y="0" width="180" height="56" rx="8"/>
+    <text class="node-label" x="90" y="24" text-anchor="middle">Galaxy Server</text>
+    <text class="node-sublabel" x="90" y="41" text-anchor="middle">cloud orchestrator</text>
+  </g>
+  <g class="node" transform="translate(180,308)">
+    <rect class="node-shape" x="0" y="0" width="180" height="56" rx="8"/>
+    <text class="node-label" x="90" y="24" text-anchor="middle">Constellation DAG</text>
+    <text class="node-sublabel" x="90" y="41" text-anchor="middle">task graph</text>
+  </g>
+  <g class="node" transform="translate(460,308)">
+    <rect class="node-shape" x="0" y="0" width="180" height="56" rx="8"/>
+    <text class="node-label" x="90" y="24" text-anchor="middle">Knowledge Store</text>
+    <text class="node-sublabel" x="90" y="41" text-anchor="middle">memory</text>
+  </g>
+  <g class="node" transform="translate(230,464)">
+    <rect class="node-shape" x="0" y="0" width="180" height="56" rx="8"/>
+    <text class="node-label" x="90" y="24" text-anchor="middle">AppAgent</text>
+    <text class="node-sublabel" x="90" y="41" text-anchor="middle">application controller</text>
+  </g>
+  <g class="node" transform="translate(460,464)">
+    <rect class="node-shape" x="0" y="0" width="180" height="56" rx="8"/>
+    <text class="node-label" x="90" y="24" text-anchor="middle">Experience Manager</text>
+    <text class="node-sublabel" x="90" y="41" text-anchor="middle">learning</text>
+  </g>
+  <g class="node" transform="translate(60,620)">
+    <rect class="node-shape" x="0" y="0" width="180" height="56" rx="8"/>
+    <text class="node-label" x="90" y="24" text-anchor="middle">UI Executor</text>
+    <text class="node-sublabel" x="90" y="41" text-anchor="middle">GUI</text>
+  </g>
+  <g class="node" transform="translate(320,620)">
+    <rect class="node-shape" x="0" y="0" width="180" height="56" rx="8"/>
+    <text class="node-label" x="90" y="24" text-anchor="middle">CLI Executor</text>
+    <text class="node-sublabel" x="90" y="41" text-anchor="middle">command line</text>
+  </g>
+  <g class="node" transform="translate(580,620)">
+    <rect class="node-shape" x="0" y="0" width="180" height="56" rx="8"/>
+    <text class="node-label" x="90" y="24" text-anchor="middle">API Executor</text>
+    <text class="node-sublabel" x="90" y="41" text-anchor="middle">programmatic</text>
+  </g>
+
+  <text id="subtitle" class="diagram-title" x="410" y="40" text-anchor="middle">UFO³ System Architecture</text>
+  <text class="diagram-subtitle" x="410" y="70" text-anchor="middle">Starfield · Cosmic Service Map</text>
+
+  <g class="legend" transform="translate(52,724)">
+    <rect class="legend-panel" x="-12" y="-4" width="182" height="104" rx="8"/>
+    <text class="legend-title" x="0" y="14">Legend</text>
+    <line x1="0" y1="36" x2="40" y2="36" class="edge edge-data edge-animated"/>
+    <text class="legend-text" x="52" y="36" dominant-baseline="middle">Data flow</text>
+    <line x1="0" y1="60" x2="40" y2="60" class="edge edge-control"/>
+    <text class="legend-text" x="52" y="60" dominant-baseline="middle">Control link</text>
+    <line x1="0" y1="84" x2="40" y2="84" class="edge edge-dependency"/>
+    <text class="legend-text" x="52" y="84" dominant-baseline="middle">Dependency link</text>
+  </g>
+</svg>

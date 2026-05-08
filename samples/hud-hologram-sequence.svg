@@ -1,0 +1,380 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 650" role="img" aria-labelledby="svg-title svg-desc">
+  <title id="svg-title">API AUTHENTICATION FLOW</title>
+  <desc id="svg-desc">HUD HOLOGRAM SEQUENCE DIAGRAM SHOWING CLIENT LOGIN, TOKEN VALIDATION, AND AUTHORIZED API ACCESS.</desc>
+  <rect class="canvas-bg" x="0" y="0" width="820" height="650"/>
+  <defs>
+    <pattern id="hud-scanlines" x="0" y="0" width="820" height="2" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="820" y2="0" stroke="#00c8ff" stroke-opacity="0.02" stroke-width="1"/>
+    </pattern>
+    <filter id="hud-glow" x="-15%" y="-15%" width="130%" height="130%">
+      <feGaussianBlur stdDeviation="2" in="SourceGraphic" result="blur"/>
+      <feFlood flood-color="#00c8ff" flood-opacity="0.3" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <marker id="arrow-data" viewBox="0 0 6 6" refX="5.2" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 6 3 L 0 6 Z" fill="#00c8ff"/>
+    </marker>
+    <marker id="arrow-control" viewBox="0 0 6 6" refX="5.2" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 6 3 L 0 6 Z" fill="#00ff88"/>
+    </marker>
+    <marker id="arrow-dependency" viewBox="0 0 6 6" refX="5.2" refY="3" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 6 3 L 0 6 Z" fill="#ff6040"/>
+    </marker>
+  </defs>
+  <style>
+    :root {
+      --canvas-bg: #0a0e17;
+      --node-fill: rgba(0,200,255,0.06);
+      --node-stroke: #00c8ff;
+      --text-primary: #00c8ff;
+      --text-secondary: #0090bb;
+      --text-title: #00c8ff;
+      --edge-data: #00c8ff;
+      --edge-control: #00ff88;
+      --edge-dependency: #ff6040;
+      --group-fill: rgba(0,200,255,0.03);
+      --group-stroke: rgba(0,200,255,0.4);
+      --group-label: #00c8ff;
+      --legend-bg: rgba(10,14,23,0.9);
+    }
+
+    svg {
+      background: var(--canvas-bg);
+      font-family: "IBM Plex Mono", "Consolas", monospace;
+      shape-rendering: geometricPrecision;
+      text-rendering: geometricPrecision;
+    }
+
+    text {
+      text-transform: uppercase;
+    }
+
+    .canvas-bg {
+      fill: var(--canvas-bg);
+    }
+
+    .group-shape {
+      fill: var(--group-fill);
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+      stroke-dasharray: 6 4;
+    }
+
+    .group-divider {
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+      stroke-dasharray: 6 4;
+      opacity: 0.65;
+    }
+
+    .group-label {
+      fill: var(--group-label);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .node-shape {
+      fill: var(--node-fill);
+      stroke: var(--node-stroke);
+      stroke-width: 1.5;
+      filter: url(#hud-glow);
+      animation: hud-pulse 2.5s ease-in-out infinite;
+    }
+
+    .node-label {
+      fill: var(--text-primary);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .node-sublabel {
+      fill: var(--text-secondary);
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .edge-data,
+    .edge-control,
+    .edge-dependency {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .edge-data {
+      stroke: var(--edge-data);
+      stroke-width: 1.5;
+      marker-end: url(#arrow-data);
+    }
+
+    .edge-control {
+      stroke: var(--edge-control);
+      stroke-width: 1.5;
+      marker-end: url(#arrow-control);
+    }
+
+    .edge-dependency {
+      stroke: var(--edge-dependency);
+      stroke-width: 1.5;
+      stroke-dasharray: 8 4;
+      marker-end: url(#arrow-dependency);
+    }
+
+    .edge-animated {
+      stroke-dasharray: 8 4;
+      animation: cg-edge-flow 2s linear infinite;
+    }
+
+    .edge-no-marker {
+      marker-end: none;
+    }
+
+    .edge-bidirectional {
+      marker-start: url(#arrow-dependency);
+      marker-end: url(#arrow-dependency);
+    }
+
+    .junction-control {
+      fill: var(--edge-control);
+    }
+
+    .junction-data {
+      fill: var(--edge-data);
+    }
+
+    .diagram-title {
+      fill: var(--text-title);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 6px;
+    }
+
+    .subtitle {
+      fill: var(--text-secondary);
+      font-size: 12px;
+      letter-spacing: 3px;
+    }
+
+    .status-text {
+      fill: var(--text-primary);
+      font-size: 9px;
+      letter-spacing: 2px;
+      opacity: 0.4;
+    }
+
+    .hud-bracket line,
+    .crosshair line,
+    .crosshair circle {
+      stroke: var(--node-stroke);
+      stroke-width: 1;
+      fill: none;
+    }
+
+    .crosshair {
+      opacity: 0.3;
+    }
+
+    .legend-panel {
+      fill: var(--legend-bg);
+      stroke: var(--group-stroke);
+      stroke-width: 1;
+    }
+
+    .legend-title {
+      fill: var(--text-primary);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .legend-text {
+      fill: var(--text-primary);
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .scanline-overlay {
+      fill: url(#hud-scanlines);
+      pointer-events: none;
+    }
+
+    .node-accent {
+      fill: none;
+      stroke: var(--node-stroke);
+      stroke-width: 1;
+      opacity: 0.35;
+    }
+
+    .group-title-bar {
+      fill: rgba(0,200,255,0.05);
+    }
+
+    @keyframes cg-edge-flow {
+      to { stroke-dashoffset: -24; }
+    }
+
+    @keyframes hud-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.88; }
+    }
+  </style>
+  <style>
+    .lifeline {
+      stroke: var(--edge-data);
+      stroke-width: 1;
+      stroke-dasharray: 6 6;
+      opacity: 0.65;
+    }
+
+    .activation-bar {
+      fill: rgba(0,200,255,0.15);
+      stroke: var(--node-stroke);
+      stroke-width: 1;
+      filter: url(#hud-glow);
+    }
+
+    .participant-box {
+      rx: 2;
+    }
+
+    .participant-text {
+      fill: var(--text-primary);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .message-label-request,
+    .message-label-response {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .message-label-request {
+      fill: var(--edge-data);
+    }
+
+    .message-label-response {
+      fill: var(--edge-control);
+    }
+
+    .edge-response {
+      stroke-dasharray: 8 4;
+    }
+  </style>
+
+  <g class="groups">
+    <line class="lifeline" x1="130" y1="144" x2="130" y2="548"/>
+    <line class="lifeline" x1="310" y1="144" x2="310" y2="548"/>
+    <line class="lifeline" x1="490" y1="144" x2="490" y2="548"/>
+    <line class="lifeline" x1="670" y1="144" x2="670" y2="548"/>
+  </g>
+
+  <g class="edges">
+    <path class="edge-data" d="M 130 204 H 294"/>
+    <path class="edge-data edge-animated edge-no-marker" d="M 130 204 H 294"/>
+
+    <path class="edge-data" d="M 318 250 H 474"/>
+    <path class="edge-data edge-animated edge-no-marker" d="M 318 250 H 474"/>
+
+    <path class="edge-control edge-response" d="M 482 296 H 326"/>
+    <path class="edge-control edge-response" d="M 302 342 H 138"/>
+
+    <path class="edge-data" d="M 130 388 H 654"/>
+    <path class="edge-data edge-animated edge-no-marker" d="M 130 388 H 654"/>
+
+    <path class="edge-data" d="M 662 434 H 326"/>
+    <path class="edge-data edge-animated edge-no-marker" d="M 662 434 H 326"/>
+
+    <path class="edge-control edge-response" d="M 318 480 H 654"/>
+    <path class="edge-control edge-response" d="M 662 526 H 138"/>
+  </g>
+
+  <g class="nodes">
+    <g class="node">
+      <rect class="node-shape participant-box" x="60" y="108" width="140" height="36" rx="2"/>
+      <path class="node-accent" d="M 68 116 H 82 M 68 116 V 130 M 192 136 H 178 M 192 136 V 122"/>
+      <text class="participant-text" x="130" y="131" text-anchor="middle">CLIENT</text>
+    </g>
+
+    <g class="node">
+      <rect class="node-shape participant-box" x="240" y="108" width="140" height="36" rx="2"/>
+      <path class="node-accent" d="M 248 116 H 262 M 248 116 V 130 M 372 136 H 358 M 372 136 V 122"/>
+      <text class="participant-text" x="310" y="131" text-anchor="middle">AUTH SERVER</text>
+    </g>
+
+    <g class="node">
+      <rect class="node-shape participant-box" x="420" y="108" width="140" height="36" rx="2"/>
+      <path class="node-accent" d="M 428 116 H 442 M 428 116 V 130 M 552 136 H 538 M 552 136 V 122"/>
+      <text class="participant-text" x="490" y="131" text-anchor="middle">TOKEN STORE</text>
+    </g>
+
+    <g class="node">
+      <rect class="node-shape participant-box" x="600" y="108" width="140" height="36" rx="2"/>
+      <path class="node-accent" d="M 608 116 H 622 M 608 116 V 130 M 732 136 H 718 M 732 136 V 122"/>
+      <text class="participant-text" x="670" y="131" text-anchor="middle">API SERVER</text>
+    </g>
+
+    <rect class="activation-bar" x="302" y="188" width="16" height="168" rx="2"/>
+    <rect class="activation-bar" x="482" y="234" width="16" height="70" rx="2"/>
+    <rect class="activation-bar" x="662" y="372" width="16" height="162" rx="2"/>
+    <rect class="activation-bar" x="302" y="418" width="16" height="74" rx="2"/>
+  </g>
+
+  <g class="floating-labels">
+    <g class="hud-bracket" opacity="0.5">
+      <line x1="12" y1="12" x2="32" y2="12"/>
+      <line x1="12" y1="12" x2="12" y2="32"/>
+    </g>
+    <g class="hud-bracket" opacity="0.5">
+      <line x1="808" y1="12" x2="788" y2="12"/>
+      <line x1="808" y1="12" x2="808" y2="32"/>
+    </g>
+    <g class="hud-bracket" opacity="0.5">
+      <line x1="12" y1="638" x2="32" y2="638"/>
+      <line x1="12" y1="638" x2="12" y2="618"/>
+    </g>
+    <g class="hud-bracket" opacity="0.5">
+      <line x1="808" y1="638" x2="788" y2="638"/>
+      <line x1="808" y1="638" x2="808" y2="618"/>
+    </g>
+
+    <text x="410" y="28" text-anchor="middle" class="diagram-title">API AUTHENTICATION FLOW</text>
+    <text x="410" y="52" text-anchor="middle" class="subtitle">HUD · ORDERED AUTH SEQUENCE</text>
+    <text x="790" y="24" text-anchor="end" class="status-text">STATUS: ONLINE</text>
+
+    <g class="crosshair">
+      <circle cx="268" cy="28" r="3"/>
+      <line x1="262" y1="28" x2="274" y2="28"/>
+      <line x1="268" y1="22" x2="268" y2="34"/>
+    </g>
+
+    <text class="message-label-request" x="212" y="194" text-anchor="middle">POST /LOGIN</text>
+    <text class="message-label-request" x="396" y="240" text-anchor="middle">VALIDATE CREDENTIALS</text>
+    <text class="message-label-response" x="404" y="286" text-anchor="middle">200 OK</text>
+    <text class="message-label-response" x="220" y="332" text-anchor="middle">JWT TOKEN</text>
+    <text class="message-label-request" x="392" y="378" text-anchor="middle">GET /DATA [BEARER TOKEN]</text>
+    <text class="message-label-request" x="494" y="424" text-anchor="middle">VERIFY TOKEN</text>
+    <text class="message-label-response" x="486" y="470" text-anchor="middle">TOKEN VALID</text>
+    <text class="message-label-response" x="400" y="516" text-anchor="middle">200 DATA RESPONSE</text>
+
+    <g class="legend" transform="translate(60,560)">
+      <rect class="legend-panel" x="-12" y="-4" width="188" height="80" rx="8"/>
+      <text class="legend-title" x="0" y="14">LEGEND</text>
+      <line x1="0" y1="36" x2="40" y2="36" class="edge-data"/>
+      <line x1="0" y1="36" x2="40" y2="36" class="edge-data edge-animated edge-no-marker"/>
+      <text class="legend-text" x="52" y="36" dominant-baseline="middle">REQUEST</text>
+      <line x1="0" y1="60" x2="40" y2="60" class="edge-control edge-response"/>
+      <text class="legend-text" x="52" y="60" dominant-baseline="middle">RESPONSE</text>
+    </g>
+  </g>
+
+  <rect class="scanline-overlay" x="0" y="0" width="820" height="650"/>
+</svg>
