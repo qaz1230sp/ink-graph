@@ -7,15 +7,15 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"/></a>
-  <a href="https://www.npmjs.com/package/ink-graph"><img src="https://img.shields.io/npm/v/ink-graph.svg" alt="npm version"/></a>
-  <a href="https://www.npmjs.com/package/ink-graph"><img src="https://img.shields.io/npm/dm/ink-graph.svg" alt="npm downloads"/></a>
+  <a href="https://www.npmjs.com/package/@qaz1230sp/ink-graph"><img src="https://img.shields.io/npm/v/@qaz1230sp/ink-graph.svg" alt="npm version"/></a>
+  <a href="https://www.npmjs.com/package/@qaz1230sp/ink-graph"><img src="https://img.shields.io/npm/dm/@qaz1230sp/ink-graph.svg" alt="npm downloads"/></a>
   <a href="https://github.com/qaz1230sp/ink-graph/stargazers"><img src="https://img.shields.io/github/stars/qaz1230sp/ink-graph?style=social" alt="GitHub Stars"/></a>
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"/></a>
   <a href="https://github.com/qaz1230sp/ink-graph/issues"><img src="https://img.shields.io/github/issues/qaz1230sp/ink-graph" alt="GitHub Issues"/></a>
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/ink-graph"><b>📦 npm Package</b></a> &nbsp;|&nbsp;
+  <a href="https://www.npmjs.com/package/@qaz1230sp/ink-graph"><b>📦 npm Package</b></a> &nbsp;|&nbsp;
   <a href="SKILL.md"><b>📄 SKILL.md</b></a> &nbsp;|&nbsp;
   <a href="CONTRIBUTING.md">🤝 Contribute</a> &nbsp;|&nbsp;
   <a href="README.zh.md">🇨🇳 中文文档</a>
@@ -75,41 +75,18 @@ All 11 themes applied to the same architecture diagram:
 
 ### Installation
 
-Choose the setup that matches your AI tool:
-
-**npm (Recommended)**
+Install the skill:
 ```bash
-npm install -g ink-graph
+npx skills add qaz1230sp/ink-graph
 ```
 
-**GitHub Copilot CLI**
-```bash
-git clone https://github.com/qaz1230sp/ink-graph.git ~/.agents/skills/ink-graph
+Or place this directory into your AI tool's skills folder manually:
+
+```
+~/.claude/skills/ink-graph/
 ```
 
-**Claude Code**
-```bash
-# Option 1: npm
-npm install ink-graph
-# Then add to .claude/settings.json:
-# { "permissions": { "allow": ["skill:ink-graph"] } }
-
-# Option 2: git clone
-git clone https://github.com/qaz1230sp/ink-graph.git ~/ink-graph
-```
-
-**Cursor**
-```bash
-git clone https://github.com/qaz1230sp/ink-graph.git ~/ink-graph
-# Add the SKILL.md path to Cursor's custom instructions or rules
-```
-
-**Manual**
-```
-Copy the contents of SKILL.md into your AI assistant's system prompt,
-custom instructions, or knowledge base. The references/ directory
-contains theme definitions the AI will read when generating diagrams.
-```
+You can also install via the Claude Code skills management interface.
 
 ### Your First Diagram
 
